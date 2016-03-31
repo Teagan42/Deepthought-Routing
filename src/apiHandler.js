@@ -50,9 +50,10 @@ function setupRoutes() {
             models[prop].init(apiModel);
         }
     }
-    //Not sure if these should be in this class
-    //apiModel.registerPublicRoute('get', 'displayCurrentVersion', '', currentVersion, null, 'Gets the current API version information.');
-    apiModel.registerPublicRoute('get', 'displayAvailableRoutes', '/routes/', getRoutes, null, 'Displays the available routes.');
+
+    if (config.routesUri) {
+        apiModel.registerPublicRoute('get', 'displayAvailableRoutes', config.routesUri, getRoutes, null, 'Displays the available routes.');
+    }
 }
 
 exports.setup = setup;
