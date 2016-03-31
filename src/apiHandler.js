@@ -40,7 +40,7 @@ function preRegisterRoute(route) {
     var tempRoute = route;
 
     if (config.logRouteRegistration) {
-        logger.info(JSON.stringify(tempRoute));
+        //logger.info(JSON.stringify(tempRoute));
     }
 }
 
