@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/Teagan42/Deepthought-Routing.git"
   },
+  "dependencies":{
+    "express": "~4.13.1",
+  },
   "author": "Teagan Glenn",
   "license": "MIT",
   "bugs": {
