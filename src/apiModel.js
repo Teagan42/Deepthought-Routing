@@ -7,8 +7,16 @@ var   enforceLeadingSlash = false
 
 const PUBLIC = "public"
     , SECURED = "secured"
-    , ADMINISTRATION = { SYSTEM: "systemAdministration", USER: "userAdministration"
-};
+    , ADMINISTRATION = {
+        SYSTEM: "systemAdministration"
+      , USER: "userAdministration"
+    },
+    validMethods = [
+        'GET'
+      , 'PUT'
+      , 'POST'
+      , 'DELETE'
+    ];
 
 var routes = {};
 
