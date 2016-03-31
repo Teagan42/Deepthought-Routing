@@ -1,0 +1,19 @@
+{
+  "name": "deepthought-routing",
+  "version": "1.0.0",
+  "description": "Dynamic routing handler for express.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Teagan42/Deepthought-Routing.git"
+  },
+  "author": "Teagan Glenn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Teagan42/Deepthought-Routing/issues"
+  },
+  "homepage": "https://github.com/Teagan42/Deepthought-Routing#readme"
+}
