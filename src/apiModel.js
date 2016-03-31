@@ -1,8 +1,9 @@
 var curry = require('curry');
 var EventEmitter = require('events').EventEmitter;
-var config = require('../../config.json');
 var   registeredRoute = new EventEmitter()
     , registeredRouteError = new EventEmitter();
+var   enforceLeadingSlash = false
+    , enforceTrailingSlash = false;
 
 const PUBLIC = "public"
     , SECURED = "secured"
@@ -12,11 +13,11 @@ const PUBLIC = "public"
 var routes = {};
 
 function getPrePattern(urlPattern) {
-    return config.enforceLeadingSlash && !urlPattern.match(/^\//) ? '/' : '';
+    return enforceLeadingSlash && !urlPattern.match(/^\//) ? '/' : '';
 }
 
 function getPostPattern(urlPattern) {
-    return config.enforceTrailingSlash && !urlPattern.match(/\[\/\]$/) ? '[/]?' : '';
+    return enforceTrailingSlash && !urlPattern.match(/\[\/\]$/) ? '[/]?' : '';
 }
 
 function applyPatternSettings(urlPattern) {
@@ -65,4 +66,5 @@ exports.routeRegistered = registeredRoute;
 exports.routeRegisteredError = registeredRouteError;
 
 //State
-exports.routes = routes;
+exports.routes = routes;exports.enforceLeadingSlash  = enforceLeadingSlash;
+exports.enforceTrailingSlash = enforceTrailingSlash;
