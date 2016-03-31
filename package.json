@@ -11,7 +11,16 @@
     "url": "git+https://github.com/Teagan42/Deepthought-Routing.git"
   },
   "dependencies":{
-    "express": "~4.13.1",
+    "express": "~4.13.1"
+  },
+  "devDependencies":{
+    "eslint": "^2.4.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-compass": "^1.1.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha-test": "^0.12.7",
+    "gruntify-eslint": "^2.0.0",
+    "mocha": "^2.4.5"
   },
   "author": "Teagan Glenn",
   "license": "MIT",
