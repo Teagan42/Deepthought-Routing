@@ -25,12 +25,8 @@ function setup(app, cfg) {
     models = models || cfg.models;
 
     apiModel.routeRegistered.on('registeredSuccessfully', function(route) {
-        if (!route.method) {
-            // throw error
-        } else {
-            preRegisterRoute(route);
-            app[route.method](route.pattern, route.handler);
-        }
+        preRegisterRoute(route);
+        app[route.method](route.pattern, route.handler);
     });
 
     apiModel.routeRegisteredError.on('registrationError', function(route) {
