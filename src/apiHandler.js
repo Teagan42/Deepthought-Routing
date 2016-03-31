@@ -6,15 +6,6 @@ var models = {
     "login" : require('../model/loginModel'),
     "dashboard": require('../model/dashboardModel')
 }
-function currentVersion(req, res) {
-    var result = {
-        version:"0.1",
-        about:"This API acts as a gateway for disparate data sources",
-        why:"Why not?",
-        authentication: {URL:config.host +"api/authenticate", queryParameters:["user", "key"]}
-    };
-    res.json(result);
-}
 
 function getRoutes(req, res) {
     var urls = [];
