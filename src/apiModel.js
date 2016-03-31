@@ -58,10 +58,10 @@ var registerRoute = curry(function(securityLevel, category, method, name, urlPat
     registeredRoute.emit('registeredSuccessfully', route);
 });
 
-const registerPublicRoute = registerRoute(PUBLIC, null);
+const registerPublicRoute        = registerRoute(PUBLIC, null);
 const registerAuthenticatedRoute = registerRoute(SECURED, null);
-const registerSystemAdminRoute = registerRoute(SECURED, ADMINISTRATION.SYSTEM);
-const registerUserAdminRoute = registerRoute(SECURED, ADMINISTRATION.USER);
+const registerSystemAdminRoute   = registerRoute(SECURED, ADMINISTRATION.SYSTEM);
+const registerUserAdminRoute     = registerRoute(SECURED, ADMINISTRATION.USER);
 
 //Methods
 exports.registerPublicRoute                 = registerPublicRoute;
@@ -70,9 +70,10 @@ exports.registerSystemAdministrationRoute   = registerSystemAdminRoute;
 exports.registerUserAdministrationRoute     = registerUserAdminRoute;
 
 //Signals
-exports.routeRegistered = registeredRoute;
+exports.routeRegistered      = registeredRoute;
 exports.routeRegisteredError = registeredRouteError;
 
 //State
-exports.routes = routes;exports.enforceLeadingSlash  = enforceLeadingSlash;
+exports.routes               = routes;
+exports.enforceLeadingSlash  = enforceLeadingSlash;
 exports.enforceTrailingSlash = enforceTrailingSlash;
