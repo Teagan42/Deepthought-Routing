@@ -48,7 +48,7 @@ var registerRoute = curry(function(securityLevel, category, method, name, urlPat
         , "description": description
     };
 
-    if (routes[routeKey]) {
+    if (routes[routeKey] || !route.method || !VALID_METHODS.include(route.method.toUpperCase())) {
         registeredRouteError.emit('registrationError', route);
         return;
     }
