@@ -1,0 +1,5 @@
+{
+    "enforceTrailingSlash": true,
+    "enforceLeadingSlash": true,
+    "logRouteRegistration": true
+}
