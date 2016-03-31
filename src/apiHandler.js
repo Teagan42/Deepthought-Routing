@@ -70,3 +70,4 @@ function setupRoutes() {
 }
 
 exports.setup = setup;
+exports.models = models;
