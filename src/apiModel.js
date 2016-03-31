@@ -11,7 +11,7 @@ const PUBLIC = "public"
         SYSTEM: "systemAdministration"
       , USER: "userAdministration"
     },
-    validMethods = [
+    VALID_METHODS = [
         'GET'
       , 'PUT'
       , 'POST'
