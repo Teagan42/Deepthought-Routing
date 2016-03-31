@@ -40,7 +40,7 @@ var registerRoute = curry(function(securityLevel, category, method, name, urlPat
     var route = {
         "secured": securityLevel === SECURED
         , "category": category
-        , "method": method
+        , "method": method.toLowerCase()
         , "name": name
         , "pattern": enforcedPattern
         , "handler": handler
