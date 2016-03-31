@@ -20,7 +20,10 @@ function getRoutes(req, res) {
     res.json(urls);
 }
 
-function setup(app) {
+function setup(app, cfg) {
+    config = cfg || require('../config.json');
+    models = models || cfg.models;
+
     apiModel.routeRegistered.on('registeredSuccessfully', function(route) {
         if (!route.method) {
             // throw error
