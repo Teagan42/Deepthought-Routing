@@ -1,11 +1,7 @@
-var config = require('../../config.json');
-var apiModel = require('../model/ApiModel.js');
-var logger = require('../services/logger.js');
-
-var models = {
-    "login" : require('../model/loginModel'),
-    "dashboard": require('../model/dashboardModel')
-}
+var config;
+var models;
+var apiModel = require('./apiModel.js');
+//var logger = require('../services/logger.js');
 
 function getRoutes(req, res) {
     var urls = [];
