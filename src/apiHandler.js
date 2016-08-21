@@ -1,5 +1,5 @@
 var config;
-var models;
+var models = [];
 var apiModel = require('./apiModel.js');
 //var logger = require('../services/logger.js');
 
@@ -22,7 +22,7 @@ function getRoutes(req, res) {
 
 function setup(app, cfg) {
     config = cfg || require('../config.json');
-    models = models || cfg.models;
+    models = config.models || models;
 
     apiModel.routeRegistered.on('registeredSuccessfully', function(route) {
         preRegisterRoute(route);
@@ -34,6 +34,8 @@ function setup(app, cfg) {
     });
 
     setupRoutes();
+
+    return apiModel;
 }
 
 function preRegisterRoute(route) {
