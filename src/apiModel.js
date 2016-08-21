@@ -1,17 +1,19 @@
-var curry = require('curry');
-var EventEmitter = require('events').EventEmitter;
-var   registeredRoute = new EventEmitter()
-    , registeredRouteError = new EventEmitter();
-var   enforceLeadingSlash = false
-    , enforceTrailingSlash = false;
+"use strict";
+
+let curry = require('curry');
+let EventEmitter = require('events').EventEmitter;
+let registeredRoute = new EventEmitter();
+let registeredRouteError = new EventEmitter();
+let enforceLeadingSlash = false;
+let enforceTrailingSlash = false;
 
 const PUBLIC = "public"
-    , SECURED = "secured"
-    , ADMINISTRATION = {
+const SECURED = "secured"
+const ADMINISTRATION = {
         SYSTEM: "systemAdministration"
       , USER: "userAdministration"
-    },
-    VALID_METHODS = [
+    }
+const VALID_METHODS = [
         'GET'
       , 'PUT'
       , 'POST'
@@ -48,7 +50,7 @@ var registerRoute = curry(function(securityLevel, category, method, name, urlPat
         , "description": description
     };
 
-    if (routes[routeKey] || !route.method || !VALID_METHODS.include(route.method.toUpperCase())) {
+    if (routes[routeKey] || !route.method || VALID_METHODS.indexOf(route.method.toUpperCase()) === -1) {
         registeredRouteError.emit('registrationError', route);
         return;
     }
