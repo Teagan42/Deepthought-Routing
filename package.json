@@ -1,6 +1,6 @@
 {
   "name": "deepthought-routing",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Dynamic routing handler for express.js",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "curry": "^1.2.0",
-    "express": "^4.13.1"
+    "express": "^4.13.1",
+    "technicolor-logger": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^2.4.0",

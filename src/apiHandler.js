@@ -1,7 +1,7 @@
 var config;
 var models = [];
 var apiModel = require('./apiModel.js');
-//var logger = require('../services/logger.js');
+var logger = require('technicolor-logger');
 
 function getRoutes(req, res) {
     var urls = [];
@@ -41,8 +41,8 @@ function setup(app, cfg) {
 function preRegisterRoute(route) {
     var tempRoute = route;
 
-    if (config.logRouteRegistration) {
-        //logger.info(JSON.stringify(tempRoute));
+    if (!config.logRouteRegistration) {
+        logger.info(JSON.stringify(tempRoute));
     }
 }
 
