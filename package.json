@@ -25,7 +25,17 @@
     "mocha": "^2.4.5",
     "grunt-exec": "*"
   },
-  "author": "Teagan Glenn",
+  "author": "James Gibson",
+  "contributors":[
+    {
+        "name":"James Gibson",
+        "url":"https://github.com/james-gibson"
+    },
+    {
+        "name": "Teagan Glenn", 
+        "url":"https://github.com/Teagan42"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Teagan42/Deepthought-Routing/issues"
