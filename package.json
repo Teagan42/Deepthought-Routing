@@ -10,11 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/Teagan42/Deepthought-Routing.git"
   },
-  "dependencies":{
-    "express": "~4.13.1",
-    "curry": "*"
+  "dependencies": {
+    "curry": "^1.2.0",
+    "express": "^4.13.1"
   },
-  "devDependencies":{
+  "devDependencies": {
     "eslint": "^2.4.0",
     "grunt": "^0.4.5",
     "chai": "*",
@@ -26,14 +26,14 @@
     "grunt-exec": "*"
   },
   "author": "James Gibson",
-  "contributors":[
+  "contributors": [
     {
-        "name":"James Gibson",
-        "url":"https://github.com/james-gibson"
+      "name": "James Gibson",
+      "url": "https://github.com/james-gibson"
     },
     {
-        "name": "Teagan Glenn", 
-        "url":"https://github.com/Teagan42"
+      "name": "Teagan Glenn",
+      "url": "https://github.com/Teagan42"
     }
   ],
   "license": "MIT",
