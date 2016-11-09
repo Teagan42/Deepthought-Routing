@@ -6,6 +6,7 @@ let registeredRoute = new EventEmitter();
 let registeredRouteError = new EventEmitter();
 let enforceLeadingSlash = false;
 let enforceTrailingSlash = false;
+let authenticationHandlers = [];
 
 const PUBLIC = "public"
 const SECURED = "secured"
@@ -39,13 +40,15 @@ function applyPatternSettings(urlPattern) {
 var registerRoute = curry(function(securityLevel, category, method, name, urlPattern, handler, parameters, description) {
     var enforcedPattern = applyPatternSettings(urlPattern);
     var routeKey = method + ':' + enforcedPattern;
+    var isSecured = securityLevel === SECURED;
+    
     var route = {
-        "secured": securityLevel === SECURED
+        "secured": isSecured
         , "category": category
         , "method": method.toLowerCase()
         , "name": name
         , "pattern": enforcedPattern
-        , "handler": handler
+        , "handler": isSecured ? authenticationHandlers.concat([handler]) : [handler]
         , "parameters": parameters
         , "description": description
     };
@@ -64,6 +67,9 @@ const registerPublicRoute        = registerRoute(PUBLIC, null);
 const registerAuthenticatedRoute = registerRoute(SECURED, null);
 const registerSystemAdminRoute   = registerRoute(SECURED, ADMINISTRATION.SYSTEM);
 const registerUserAdminRoute     = registerRoute(SECURED, ADMINISTRATION.USER);
+
+//Configuration
+exports.addAuthenticationHandler = (x) => {authenticationHandlers.push(x)};
 
 //Methods
 exports.registerPublicRoute                 = registerPublicRoute;
