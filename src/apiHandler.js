@@ -41,7 +41,8 @@ function setup(app, cfg) {
 function preRegisterRoute(route) {
     var tempRoute = route;
 
-    if (!config.logRouteRegistration) {
+    if (config.logRouteRegistration) {
+        console.log(JSON.stringify(tempRoute));
         logger.info(JSON.stringify(tempRoute));
     }
 }
@@ -55,6 +56,11 @@ function setupRoutes() {
 
     if (config.routesUri) {
         apiModel.registerPublicRoute('get', 'displayAvailableRoutes', config.routesUri, getRoutes, null, 'Displays the available routes.');
+    }
+
+    if (config.swaggerUri) {
+        // do the swagger thing
+        // register the swagger specific route
     }
 }
 
