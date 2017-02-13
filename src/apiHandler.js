@@ -37,9 +37,11 @@ function formatToSwaggerJSON (req, res) {
       urls[currentRoute.pattern] = url;
   }
 
-  config.swaggerOptions.excludedUris.filter(function (string) {
-    delete url[string];
-  });
+  if (config.swaggerOptions.excludedUris.length) {
+    config.swaggerOptions.excludedUris.filter(function (string) {
+      delete url[string];
+    });
+  }
 
   let swaggerSpec = configureSwaggerOptions(urls);
 
