@@ -20,6 +20,58 @@ function getRoutes(req, res) {
     res.json(urls);
 }
 
+  var urls = {};
+  var apiRoutes = apiModel.routes;
+  for (var route in apiRoutes) {
+      var currentRoute = apiRoutes[route];
+      if (!currentRoute) { continue; }
+      var url = {};
+
+      let tempObj = convertRouteToSwaggerDoc(currentRoute);
+      let httpVerb = currentRoute['method'];
+      tempObj.path = currentRoute.pattern;
+      url[httpVerb] = tempObj;
+      urls[currentRoute.pattern] = url;
+  }
+
+  delete urls[config.swaggerUri];
+
+  let swaggerSpec = configureSwaggerOptions(urls);
+
+  res.setHeader('Content-Type', 'application/json');
+  res.json(swaggerSpec);
+}
+
+function configureSwaggerOptions(urls) {
+  // initialize swagger-jsdoc
+  let swaggerSpec = swaggerJSDoc(config.swaggerOptions);
+
+  swaggerSpec.paths = urls;
+  swaggerSpec.apis = urls;
+  swaggerSpec.securityDefinitions =
+    {
+      userSecurity: {
+          type: 'apiKey'
+        , in: 'query'
+        , name: 'user-api-key'
+      }
+    };
+
+  return swaggerSpec;
+}
+
+function convertRouteToSwaggerDoc(route) {
+  let resultObj = {
+        'description': route.description ? route.description : ''
+      , 'parameters':  []
+      , 'responses': route.responses ? route.responses : []
+  }
+  if (route.secured) {
+    resultObj.security = { userSecurity : [] };
+  }
+  return resultObj;
+}
+
 function setup(app, cfg) {
     config = cfg || require('../config.json');
     models = config.models || models;
@@ -59,8 +111,7 @@ function setupRoutes() {
     }
 
     if (config.swaggerUri) {
-        // do the swagger thing
-        // register the swagger specific route
+        apiModel.registerPublicRoute('get', 'exportSwaggerJSON', config.swaggerUri, formatToSwaggerJSON, null, 'Displays Swagger formatted JSON.');
     }
 }
 

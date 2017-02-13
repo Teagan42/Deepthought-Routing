@@ -41,7 +41,7 @@ var registerRoute = curry(function(securityLevel, category, method, name, urlPat
     var enforcedPattern = applyPatternSettings(urlPattern);
     var routeKey = method + ':' + enforcedPattern;
     var isSecured = securityLevel === SECURED;
-    
+
     var route = {
         "secured": isSecured
         , "category": category
@@ -85,3 +85,5 @@ exports.routeRegisteredError = registeredRouteError;
 exports.routes               = routes;
 exports.enforceLeadingSlash  = enforceLeadingSlash;
 exports.enforceTrailingSlash = enforceTrailingSlash;
+
+exports.applyPatternSettings = applyPatternSettings;
