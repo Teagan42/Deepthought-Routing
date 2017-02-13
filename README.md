@@ -64,7 +64,7 @@ const routeConfig = {
 ```
 
 ## Configurable options:
-1. Your Documentation's title, version, and description in the ``` swaggerDefinition``` object. Ensure that the host and basePath correlate to your API's index route. You may hard-code the host.
+1. Your Documentation's title, version, and description in the ``` swaggerDefinition``` object. Ensure that the ```host``` and ```basePath``` correlate to your API's index route. You may hard-code the ```host```.
 
 2. You may exclude routes from documentation by adding them to the ```excludedUris``` array on the ```swaggerOptions``` object.
 
