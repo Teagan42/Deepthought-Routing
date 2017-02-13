@@ -80,7 +80,7 @@ if (url && url.length > 1) {
         url = "/"; // your url here
       }
 ```
-2. After starting your app, navigate to ```/api-docs``` (http//localhost:3000/api-docs)
+After starting your app, navigate to ```/api-docs``` (http//localhost:3000/api-docs)
 
 
 # Selling points
