@@ -70,16 +70,17 @@ const routeConfig = {
 
 3. Your ```swaggerUri``` value is the route at which you may view the JSON formatted for Swagger.
 
-4. In your ```public``` folder, copy over the ```dist``` folder from https://github.com/swagger-api/swagger-ui and modify the url declaration line in the ```index.html``` line to match the ```swaggerUri``` URL.
+## Viewing Swagger documentation
+
+1. In your ```public``` folder, copy over the ```dist``` folder from https://github.com/swagger-api/swagger-ui and rename it to ```api-docs``` modify the url declaration line in the ```index.html``` line to match the ```swaggerUri``` URL.
 ```
 if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
         url = "/"; // your url here
       }
-
 ```
-
+2. After starting your app, navigate to ```/api-docs``` (http//localhost:3000/api-docs)
 
 
 # Selling points
