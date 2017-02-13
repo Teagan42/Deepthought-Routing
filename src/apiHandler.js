@@ -3,6 +3,8 @@ var models = [];
 var apiModel = require('./apiModel.js');
 var logger = require('technicolor-logger');
 
+const swaggerJSDoc = require('swagger-jsdoc');
+
 function getRoutes(req, res) {
     var urls = [];
     var apiRoutes = apiModel.routes;
@@ -20,6 +22,7 @@ function getRoutes(req, res) {
     res.json(urls);
 }
 
+function formatToSwaggerJSON (req, res) {
   var urls = {};
   var apiRoutes = apiModel.routes;
   for (var route in apiRoutes) {
@@ -34,7 +37,9 @@ function getRoutes(req, res) {
       urls[currentRoute.pattern] = url;
   }
 
-  delete urls[config.swaggerUri];
+  config.swaggerOptions.excludedUris.filter(function (string) {
+    delete url[string];
+  });
 
   let swaggerSpec = configureSwaggerOptions(urls);
 
