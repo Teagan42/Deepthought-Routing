@@ -13,6 +13,7 @@
   "dependencies": {
     "curry": "^1.2.0",
     "express": "^4.13.1",
+    "swagger-jsdoc": "^1.9.1",
     "technicolor-logger": "^1.0.0"
   },
   "devDependencies": {
