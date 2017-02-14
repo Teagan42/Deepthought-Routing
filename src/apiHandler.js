@@ -3,6 +3,8 @@ var models = [];
 var apiModel = require('./apiModel.js');
 var logger = require('technicolor-logger');
 
+const swaggerJSDoc = require('swagger-jsdoc');
+
 function getRoutes(req, res) {
     var urls = [];
     var apiRoutes = apiModel.routes;
@@ -20,6 +22,7 @@ function getRoutes(req, res) {
     res.json(urls);
 }
 
+function getSwaggerSpec (req, res) {
   var urls = {};
   var apiRoutes = apiModel.routes;
   for (var route in apiRoutes) {
@@ -34,7 +37,11 @@ function getRoutes(req, res) {
       urls[currentRoute.pattern] = url;
   }
 
-  delete urls[config.swaggerUri];
+  if (config.swaggerOptions.excludedUris.length) {
+    config.swaggerOptions.excludedUris.filter(function (string) {
+      delete url[string];
+    });
+  }
 
   let swaggerSpec = configureSwaggerOptions(urls);
 
@@ -63,7 +70,7 @@ function configureSwaggerOptions(urls) {
 function convertRouteToSwaggerDoc(route) {
   let resultObj = {
         'description': route.description ? route.description : ''
-      , 'parameters':  route.parameters.length ? route.parameters : []
+      , 'parameters':  Array.isArray(route.parameters) ? route.parameters : []
       , 'responses': route.responses ? route.responses : []
   }
   if (route.secured) {
@@ -111,7 +118,7 @@ function setupRoutes() {
     }
 
     if (config.swaggerUri) {
-        apiModel.registerPublicRoute('get', 'exportSwaggerJSON', config.swaggerUri, formatToSwaggerJSON, null, 'Displays Swagger formatted JSON.');
+        apiModel.registerPublicRoute('get', 'exportSwaggerJSON', config.swaggerUri, getSwaggerSpec, null, 'Displays Swagger formatted JSON.');
     }
 }
 
