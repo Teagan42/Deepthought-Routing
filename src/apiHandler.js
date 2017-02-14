@@ -70,7 +70,7 @@ function configureSwaggerOptions(urls) {
 function convertRouteToSwaggerDoc(route) {
   let resultObj = {
         'description': route.description ? route.description : ''
-      , 'parameters':  route.parameters.length ? route.parameters : []
+      , 'parameters':  Array.isArray(route.parameters) ? route.parameters : []
       , 'responses': route.responses ? route.responses : []
   }
   if (route.secured) {
