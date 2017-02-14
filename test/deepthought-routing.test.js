@@ -42,7 +42,7 @@ describe('Verify that', function() {
                 , ''
                 , '/'
                 , function() {}
-                , [{}]
+                , []
                 , '');
 
             let routes = Util.describeExpressAppRoutes(app);
@@ -74,7 +74,7 @@ describe('Verify that', function() {
                     , ''
                     , '/'
                     , function() {}
-                    , [{}]
+                    , []
                     , '');
             } catch(err) {
                 let routes;
@@ -95,7 +95,7 @@ describe('Verify that', function() {
                 , ''
                 , '/fake'
                 , function() {}
-                , [{}]
+                , []
                 , '');
 
             let routes;

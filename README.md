@@ -17,7 +17,7 @@ apiModel.registerPublicRoute(
     , 'Hello World Example Route'
     , '/'
     , function(req, res, next) { res.send('Hello World'); next();}
-    , [{}]
+    , [] // this is an array of parameter objects, see below
     , 'This sample route is designed to meet all your hello world API needs.');
 
 app.listen(5000, function () {
@@ -26,10 +26,29 @@ app.listen(5000, function () {
 
 
 ```
+## Optional Parameter objects
+For Swagger to generate documentation for the array of parameters, the documentation needs the following structure:
+
+```
+[
+  {
+      name: "parameter name"
+    , description: "optional description"
+    , type: string, integer, etc.
+    , required: boolean
+    , format: optional
+    , in: "query"
+  }
+]
+```
+For more documentation see: http://swagger.io/specification/#parameterObject
+
+If no parameters, this must be an empty array.
+
 
 # Optional Swagger UI Implementation
 
-You can opt to include swagger documentation in your application.  This option automoatically generates Swagger formatted JSON with the creation of new routes using Deepthought-Routing's route patterns.
+You can opt to include swagger documentation in your application.  This option automatically generates Swagger formatted JSON with the creation of new routes using Deepthought-Routing's route patterns.
 
 In your app.js file, include the following code beneath the require statements.
 

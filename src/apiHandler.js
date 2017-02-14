@@ -22,7 +22,7 @@ function getRoutes(req, res) {
     res.json(urls);
 }
 
-function formatToSwaggerJSON (req, res) {
+function getSwaggerSpec (req, res) {
   var urls = {};
   var apiRoutes = apiModel.routes;
   for (var route in apiRoutes) {
@@ -118,7 +118,7 @@ function setupRoutes() {
     }
 
     if (config.swaggerUri) {
-        apiModel.registerPublicRoute('get', 'exportSwaggerJSON', config.swaggerUri, formatToSwaggerJSON, null, 'Displays Swagger formatted JSON.');
+        apiModel.registerPublicRoute('get', 'exportSwaggerJSON', config.swaggerUri, getSwaggerSpec, null, 'Displays Swagger formatted JSON.');
     }
 }
 
