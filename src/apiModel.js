@@ -24,6 +24,7 @@ const VALID_METHODS = [
 var routes = {};
 
 function getPrePattern(urlPattern) {
+    if (urlPattern === "/") return urlPattern;
     return enforceLeadingSlash && !urlPattern.match(/^\//) ? '/' : '';
 }
 
