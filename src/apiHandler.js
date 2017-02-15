@@ -39,7 +39,7 @@ function getSwaggerSpec (req, res) {
 
   if (config.swaggerOptions.excludedUris.length) {
     config.swaggerOptions.excludedUris.filter(function (string) {
-      delete url[string];
+      delete urls[string];
     });
   }
 
