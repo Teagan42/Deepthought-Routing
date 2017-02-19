@@ -5,7 +5,7 @@ const expect = Chai.expect;
 const parameterValidation = require('../../src/validation/parameterValidation');
 const Joi = require('joi');
 
-describe('Verify that', function() {
+describe('#parameterValidation', function() {
 
   describe('invalidates', function () {
     it('with missing request and required field', function () {
@@ -79,7 +79,7 @@ describe('Verify that', function() {
     });
   });
 
-  describe('it errors', function () {
+  describe('errors', function () {
     const req = {
      params: {
         id: 42
@@ -113,7 +113,7 @@ describe('Verify that', function() {
     });
   });
 
-  describe('it converts', function () {
+  describe('converts', function () {
     const schema = {
       'in': 'path',
       'name': 'id',
@@ -197,7 +197,7 @@ describe('Verify that', function() {
     // });
   });
 
-  describe('it pulls', function() {
+  describe('pulls', function() {
 
     const req = {
       body: {
