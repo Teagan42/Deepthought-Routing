@@ -2,7 +2,7 @@ const securitySchema = require('../schema/securitySchema');
 const _ = require('underscore');
 
 // Verify result from authProvider
-const verifyAuthProviderResult = function (permissions) {
+const verifyAuthProviderResult = (permissions) => {
   const result = securitySchema.validate(permissions);
 
   return result.error
@@ -11,9 +11,9 @@ const verifyAuthProviderResult = function (permissions) {
 };
 
 // Verify permissions callback
-const verifyPermissions = function (securitySchema, permissions) {
+const verifyPermissions = (securitySchema, permissions) => {
   const errors = {};
-  var isInvalid = false;
+  let isInvalid = false;
 
   // Iterate over required security keys
   _.forEach(_.keys(securitySchema), function (key) {
@@ -41,7 +41,7 @@ const verifyPermissions = function (securitySchema, permissions) {
     : Promise.resolve(true);
 };
 
-module.exports = function (authProvider, securitySchema, req) {
+module.exports = (authProvider, securitySchema, req) => {
   if (!securitySchema || !Object.keys(securitySchema).length) {
     // No security defined, resolve
     return Promise.resolve({});

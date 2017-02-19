@@ -1,14 +1,14 @@
 const _ = require('underscore');
 const parameterSchema = require('../schema/parameterSchema');
 
-const validateParameters = function(schema, req) {
+const validateParameters = (schema, req) => {
   const schemaSpec = parameterSchema.validate(schema);
   if (schemaSpec.error) {
     throw new TypeError('Schema does not match definition: ' + schemaSpec.error.annotate());
   }
 
   const error = {};
-  var isInvalid = false;
+  let isInvalid = false;
 
   // This is not valid for request, continue
   if (!schema || !schema.in)
@@ -18,7 +18,7 @@ const validateParameters = function(schema, req) {
   }
 
   // Get the context for where the parameter is
-  var context = req || {};
+  let context = req || {};
   switch (schema.in) {
     case 'body':
     case 'formData':

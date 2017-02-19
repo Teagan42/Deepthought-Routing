@@ -5,10 +5,10 @@ const expect = Chai.expect;
 const parameterValidation = require('../../src/validation/parameterValidation');
 const Joi = require('joi');
 
-describe('#parameterValidation', function() {
+describe('#parameterValidation', () => {
 
-  describe('invalidates', function () {
-    it('with missing request and required field', function () {
+  describe('invalidates', () => {
+    it('with missing request and required field', () => {
       const result =
         parameterValidation({
             'in': 'path',
@@ -24,7 +24,7 @@ describe('#parameterValidation', function() {
         .to.be.a('string');
     });
 
-    it('with missing required field context', function () {
+    it('with missing required field context', () => {
       const result =
         parameterValidation({
             'in': 'path',
@@ -43,7 +43,7 @@ describe('#parameterValidation', function() {
         .to.be.a('string');
     });
 
-    it('with missing required field', function () {
+    it('with missing required field', () => {
       const result =
         parameterValidation({
             'in': 'path',
@@ -62,7 +62,7 @@ describe('#parameterValidation', function() {
         .to.be.a('string');
     });
 
-    it('with incorrect field type', function () {
+    it('with incorrect field type', () => {
       const result =
         parameterValidation({
           'in': 'path',
@@ -79,15 +79,15 @@ describe('#parameterValidation', function() {
     });
   });
 
-  describe('errors', function () {
+  describe('errors', () => {
     const req = {
      params: {
         id: 42
       }
     };
 
-    it('with missing schema props', function () {
-      expect(function () {
+    it('with missing schema props', () => {
+      expect(() => {
         parameterValidation({
           'in': 'path',
           'type': Joi.number()
@@ -95,32 +95,32 @@ describe('#parameterValidation', function() {
       }).to.throw(TypeError);
     });
 
-    it('with incorrect schema props', function () {
-      expect(function () {
+    it('with incorrect schema props', () => {
+      expect(() => {
         parameterValidation({
           'in': 'path',
           'type': Joi.number(),
-          'name': function () { },
+          'name': () => { },
           'required': true
         }, req);
       }).to.throw(TypeError);
     });
 
-    it('with no schema', function () {
-      expect(function () {
+    it('with no schema', () => {
+      expect(() => {
         parameterValidation(null, req);
       }).to.throw(TypeError);
     });
   });
 
-  describe('converts', function () {
+  describe('converts', () => {
     const schema = {
       'in': 'path',
       'name': 'id',
       'required': true
     };
 
-    it('to a number', function () {
+    it('to a number', () => {
       schema.type = Joi.number();
       const req = {
         params: {
@@ -145,7 +145,7 @@ describe('#parameterValidation', function() {
         .to.equal(1234);
     });
 
-    it('to a date', function () {
+    it('to a date', () => {
       schema.type = Joi.date();
       const req = {
         params: {
@@ -171,7 +171,7 @@ describe('#parameterValidation', function() {
         .to.equal(new Date(1943, 3, 16).toString());
     });
 
-    // it('to a string', function () {
+    // it('to a string', () => {
     //   schema.type = Joi.string();
     //   const req = {
     //     params: {
@@ -197,7 +197,7 @@ describe('#parameterValidation', function() {
     // });
   });
 
-  describe('pulls', function() {
+  describe('pulls', () => {
 
     const req = {
       body: {
@@ -214,7 +214,7 @@ describe('#parameterValidation', function() {
       }
     };
 
-    it('from query', function () {
+    it('from query', () => {
       const validation = parameterValidation({
           'in': 'query',
           'type': Joi.string(),
@@ -233,7 +233,7 @@ describe('#parameterValidation', function() {
         .to.be.a('string');
     });
 
-    it('from path/params', function () {
+    it('from path/params', () => {
       const validation = parameterValidation({
           'in': 'path',
           'type': Joi.number(),
@@ -252,7 +252,7 @@ describe('#parameterValidation', function() {
         .to.be.a('number');
     });
 
-    it('from body', function () {
+    it('from body', () => {
       const validation = parameterValidation({
           'in': 'body',
           'type': Joi.date(),
@@ -271,7 +271,7 @@ describe('#parameterValidation', function() {
         .to.be.a('Date');
     });
 
-    it('from header', function () {
+    it('from header', () => {
       const validation = parameterValidation({
         'in': 'header',
         'type': Joi.number(),
