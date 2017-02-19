@@ -1,4 +1,7 @@
+"use strict";
+
 const _ = require('underscore');
+
 const parameterSchema = require('../schema/parameterSchema');
 
 const validateParameters = (schema, req) => {

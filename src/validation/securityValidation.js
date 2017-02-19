@@ -1,5 +1,8 @@
-const securitySchema = require('../schema/securitySchema');
+"use strict";
+
 const _ = require('underscore');
+
+const securitySchema = require('../schema/securitySchema');
 
 // Verify result from authProvider
 const verifyAuthProviderResult = (permissions) => {
@@ -16,25 +19,26 @@ const verifyPermissions = (securitySchema, permissions) => {
   let isInvalid = false;
 
   // Iterate over required security keys
-  _.forEach(_.keys(securitySchema), function (key) {
-    const s = securitySchema[key];
+  Object.keys(securitySchema)
+    .forEach((key) => {
+      const s = securitySchema[key];
 
-    if (key in permissions) {
-      if (!(s instanceof Array) || !s.length) {
-        // If it's not an array - we will assume you just need the security key
-        return;
+      if (key in permissions) {
+        if (!(s instanceof Array) || !s.length) {
+          // If it's not an array - we will assume you just need the security key
+          return;
+        }
+
+        if (!_.without(s, permissions[key]).length) {
+          // We have all the permissions for this key
+          return;
+        }
       }
 
-      if (!_.without(s, permissions[key]).length) {
-        // We have all the permissions for this key
-        return;
-      }
-    }
-
-    // Apparently we do not have this permission, adding
-    errors[key] = 'Missing Permission for ' + key;
-    isInvalid = true;
-  });
+      // Apparently we do not have this permission, adding
+      errors[key] = 'Missing Permission for ' + key;
+      isInvalid = true;
+    });
 
   return isInvalid
     ? Promise.reject(errors)

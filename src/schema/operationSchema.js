@@ -1,4 +1,7 @@
+"use strict";
+
 const Joi = require('joi');
+
 const securitySchema = require('./securitySchema');
 const parameterSchema = require('./parameterSchema');
 
