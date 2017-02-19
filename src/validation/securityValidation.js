@@ -41,7 +41,7 @@ const verifyPermissions = function (securitySchema, permissions) {
     : Promise.resolve(true);
 };
 
-module.exports = function (authProvider, securitySchema, req, res, next) {
+module.exports = function (authProvider, securitySchema, req) {
   if (!securitySchema || !Object.keys(securitySchema).length) {
     // No security defined, resolve
     return Promise.resolve({});
