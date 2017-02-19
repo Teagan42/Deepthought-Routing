@@ -20,13 +20,13 @@ const verifyPermissions = function (securitySchema, permissions) {
     const s = securitySchema[key];
 
     if (key in permissions) {
-      if (!(s instanceof Array)) {
+      if (!(s instanceof Array) || !s.length) {
         // If it's not an array - we will assume you just need the security key
         return;
       }
 
-      if (!s.length || _.difference(s, permissions[key]).length === 0) {
-        // We found the required permissions for this security key
+      if (!_.without(s, permissions[key]).length) {
+        // We have all the permissions for this key
         return;
       }
     }

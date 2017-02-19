@@ -124,5 +124,34 @@ describe('#securityValidation', function () {
         })
         .catch(done);
     });
+
+    it('with extra keys', function (done) {
+      securityValidation(function () {
+          return Promise.resolve({
+            'api_key': [],
+            'other_key': ['perm']
+          });
+        }, {
+          'api_key': []
+        }, {})
+        .then(function () {
+          done();
+        })
+        .catch(done);
+    });
+
+    it('with extra permissions', function (done) {
+      securityValidation(function () {
+          return Promise.resolve({
+            'api_key': ['perm']
+          });
+        }, {
+          'api_key': []
+        }, {})
+        .then(function () {
+          done();
+        })
+        .catch(done);
+    });
   });
 });
