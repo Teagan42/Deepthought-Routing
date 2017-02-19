@@ -1,25 +1,8 @@
 const Joi = require('joi');
-
-const PARAMETER_SCHEMA = Joi.object(
-  {
-    'name': Joi.string()
-      .required(),
-    'in': Joi.any()
-      .allow('query', 'header', 'path', 'formData', 'body')
-      .required(),
-    'type': Joi.object()
-      .keys({
-        validate: Joi.func()
-      })
-      .unknown(),
-    'description': Joi.string(),
-    'required': Joi.boolean()
-      .required()
-  })
-  .unknown();
+const parameterSchema = require('../schema/parameterSchema');
 
 const validateParameters = function(schema, req) {
-  const schemaSpec = PARAMETER_SCHEMA.validate(schema);
+  const schemaSpec = parameterSchema.validate(schema);
   if (schemaSpec.error) {
     throw new TypeError('Schema does not match definition: ' + schemaSpec.error.annotate());
   }
