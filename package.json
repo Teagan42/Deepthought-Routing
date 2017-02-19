@@ -16,7 +16,8 @@
     "http-errors": "^1.6.0",
     "joi": "^10.2.2",
     "swagger-jsdoc": "^1.9.1",
-    "technicolor-logger": "^1.0.0"
+    "technicolor-logger": "^1.0.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "eslint": "^2.4.0",

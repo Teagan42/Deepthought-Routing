@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const _ = require('underscore');
 const parameterSchema = require('../schema/parameterSchema');
 
 const validateParameters = function(schema, req) {
@@ -28,10 +28,12 @@ const validateParameters = function(schema, req) {
       context = context.query || {};
       break;
     case 'path':
-      context = context.path || {};
+      context = context.params || {};
       break;
     case 'header':
-      context = context.header || {};
+      // Bring header and req keys to direct keys
+      const header = context.header || {};
+      context = _.defaults(header, req);
       break;
     default:
       break;

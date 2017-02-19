@@ -52,7 +52,7 @@ describe('Verify that', function() {
             'required': true
           },
           {
-            path: {}
+           params: {}
           });
 
       expect(result)
@@ -81,7 +81,7 @@ describe('Verify that', function() {
 
   describe('it errors', function () {
     const req = {
-      path: {
+     params: {
         id: 42
       }
     };
@@ -123,7 +123,7 @@ describe('Verify that', function() {
     it('to a number', function () {
       schema.type = Joi.number();
       const req = {
-        path: {
+        params: {
           id: '1234'
         }
       };
@@ -138,17 +138,17 @@ describe('Verify that', function() {
       expect(validation)
         .to.be.true;
 
-      expect(req.path.id)
+      expect(req.params.id)
         .to.be.a('number');
 
-      expect(req.path.id)
+      expect(req.params.id)
         .to.equal(1234);
     });
 
     it('to a date', function () {
       schema.type = Joi.date();
       const req = {
-        path: {
+        params: {
           id: '1943-04-16 00:00:000'
         }
       };
@@ -163,10 +163,10 @@ describe('Verify that', function() {
       expect(validation)
         .to.be.true;
 
-      expect(req.path.id)
+      expect(req.params.id)
         .to.be.a('Date');
 
-      expect(req.path.id.toString())
+      expect(req.params.id.toString())
         // I hate that month is 0-index
         .to.equal(new Date(1943, 3, 16).toString());
     });
@@ -174,7 +174,7 @@ describe('Verify that', function() {
     // it('to a string', function () {
     //   schema.type = Joi.string();
     //   const req = {
-    //     path: {
+    //     params: {
     //       id: 42
     //     }
     //   };
@@ -189,10 +189,10 @@ describe('Verify that', function() {
     //   expect(validation)
     //     .to.be.true;
     //
-    //   expect(req.path.id)
+    //   expect(req.params.id)
     //     .to.be.a('string');
     //
-    //   expect(req.path.id.toString())
+    //   expect(req.params.id.toString())
     //     .to.equal('42');
     // });
   });
@@ -206,7 +206,7 @@ describe('Verify that', function() {
       query: {
         'name': 'Jimmy'
       },
-      path: {
+      params: {
         'id': 52
       },
       header: {
@@ -233,7 +233,7 @@ describe('Verify that', function() {
         .to.be.a('string');
     });
 
-    it('from path', function () {
+    it('from path/params', function () {
       const validation = parameterValidation({
           'in': 'path',
           'type': Joi.number(),
@@ -248,7 +248,7 @@ describe('Verify that', function() {
       expect(validation)
         .to.be.true;
 
-      expect(req.path.id)
+      expect(req.params.id)
         .to.be.a('number');
     });
 
