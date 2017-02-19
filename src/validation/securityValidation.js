@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const securitySchema = require('../schema/securitySchema');
 const _ = require('underscore');
 
