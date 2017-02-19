@@ -13,7 +13,7 @@ const SECURED = "secured"
 const ADMINISTRATION = {
         SYSTEM: "systemAdministration"
       , USER: "userAdministration"
-    }
+    };
 const VALID_METHODS = [
         'GET'
       , 'PUT'
