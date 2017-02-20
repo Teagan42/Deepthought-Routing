@@ -1,5 +1,6 @@
 'use strict';
 
+const Joi = require('joi');
 const Chai = require('chai');
 const expect = Chai.expect;
 const Router = require('../src/router');
