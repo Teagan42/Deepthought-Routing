@@ -134,7 +134,7 @@ class Router {
                 next();
               })
               .catch((err) => {
-                return next(new HttpError.Unauthorized(err));
+                return next(new HttpError.Unauthorized(JSON.stringify(err)));
               });
           });
       }
@@ -151,7 +151,7 @@ class Router {
                   const result = parameterValidation(param, req);
 
                   if (result !== true) {
-                    return new HttpError.BadRequest(result);
+                    return next(new HttpError.BadRequest(JSON.stringify(result)));
                   }
 
                   return next();
