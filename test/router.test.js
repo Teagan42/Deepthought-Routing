@@ -315,6 +315,105 @@ describe('#Router', () => {
     });
   });
 
+  describe('load schema', () => {
+    let router = null
+
+    beforeEach('setup router', () => {
+      router = new Router(require('express')());
+    });
+
+    describe('errors', () => {
+      it('with invalid schema', () => {
+        const loadSchema = () => router.loadSchema({});
+
+        expect(loadSchema)
+          .to.throw(TypeError);
+      });
+    });
+
+    describe('succeeds', () => {
+      it('with empty schema', () => {
+        const loadSchema = () => router.loadSchema();
+
+        expect(loadSchema)
+          .to.not.throw(Error);
+
+        expect(router.schema)
+          .to.be.an('Object');
+
+        expect(Object.keys(router.schema).length)
+          .to.equal(0);
+      });
+
+      it('with permission provider', () => {
+        const loadSchema = () => router.loadSchema({
+          title: 'Test',
+          description: 'Test description',
+          contact: {
+            name: 'Test Person',
+            url: 'http://google.com',
+            email: 'test@test.com'
+          },
+          permissionProvider: () => {}
+        });
+
+        expect(loadSchema)
+          .to.not.throw(Error);
+
+        expect(router._permissionProvider)
+          .to.be.a('function');
+      });
+
+      it('with paths', () => {
+        const loadSchema = () => router.loadSchema({
+          title: 'Test',
+          description: 'Test description',
+          contact: {
+            name: 'Test Person',
+            url: 'http://google.com',
+            email: 'test@test.com'
+          },
+          paths: {
+            '/': {
+              get: {
+                summary: 'Test get',
+                description: 'Test endpoint'
+              }
+            },
+            '/:id': {
+              post: {
+                summary: 'Test Post',
+                description: 'Test endpoint'
+              }
+            }
+          }
+        });
+
+        expect(loadSchema)
+          .to.not.throw(Error);
+
+        expect(router._routes)
+          .to.be.an('Object');
+
+        expect(Object.keys(router._routes).length)
+          .to.equal(2);
+
+        Object.keys(router._routes)
+          .forEach((pattern) => {
+            expect(router._routes[pattern])
+              .to.be.an('Object');
+            expect(router._routes[pattern].handler)
+              .to.be.an('Array');
+            router._routes[pattern].handler
+              .forEach((handler) => {
+                expect(handler)
+                  .to.be.a('function');
+              });
+          });
+      });
+    });
+  });
+
   describe('validates', () => {
     const request = require('supertest');
     const permProvider = () => {
