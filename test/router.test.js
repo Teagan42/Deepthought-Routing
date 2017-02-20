@@ -315,6 +315,68 @@ describe('#Router', () => {
     });
   });
 
+  describe('swagger', () => {
+    const request = require('supertest');
+    const schema = {
+      title: 'Test',
+      description: 'Test',
+      contact: {
+        name: 'Test App',
+        url: 'http://google.com',
+        email: 'test@test.com'
+      },
+      paths: {
+        '/': {
+          get: {
+            summary: 'Test Get',
+            description: 'Test get handler',
+            handler: (res, req, next) => {}
+          }
+        }
+      }
+    };
+    let router = null
+
+    beforeEach('setup router', () => {
+      router = new Router(require('express')(), {}, null, schema);
+      router.listen();
+    });
+
+    it('should return swagger doc', (done) => {
+      request(router._expressApp)
+        .get('/swagger')
+        .end((err, res) => {
+          try {
+            expect(!err)
+              .to.equal(true);
+
+            expect(res)
+              .to.be.an('Object');
+
+            expect(res.body)
+              .to.be.an('Object');
+
+            expect(res.body)
+              .to.have.property('title');
+
+            expect(res.body)
+              .to.have.property('description');
+
+            expect(res.body)
+              .to.have.property('contact');
+
+            expect(res.body)
+              .to.have.property('paths');
+
+            done();
+          }
+          catch (err) {
+            done(err);
+          }
+        });
+    });
+  });
+
   describe('load schema', () => {
     let router = null
 

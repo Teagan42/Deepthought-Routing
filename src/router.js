@@ -9,6 +9,8 @@ const infoSchema = require('./schema/infoSchema');
 const securityValidation = require('./validation/securityValidation');
 const parameterValidation = require('./validation/parameterValidation');
 
+const swaggerHandler = require('./swaggerHandler');
+
 class Router {
   /**
    * @return {string}
@@ -34,17 +36,13 @@ class Router {
     return this;
   }
 
+  _swaggerHandler(req, res, next) {
+
+  }
+
   constructor(expressApp, config, permissionProvider, schema) {
     if (!expressApp) {
       throw new TypeError('Express app is required to listen router.');
-    }
-
-    this.loadSchema(schema);
-
-    this._isLoaded = false;
-
-    if (permissionProvider) {
-      this.setPermissionProvider(permissionProvider);
     }
 
     this._options = config || require('../config.json');
@@ -53,6 +51,7 @@ class Router {
     this._expressApp = expressApp;
     this._permissionProvider = permissionProvider;
     this._routes = {};
+    this._isLoaded = false;
 
     this._events = new EventEmitter();
     this._events.on(Router.REGISTRATION_SUCCESS, (route) => {
@@ -66,6 +65,12 @@ class Router {
 
       throw new Error(`Unable to register route: ${JSON.stringify(route)}`);
     });
+
+    this.loadSchema(schema);
+
+    if (permissionProvider) {
+      this.setPermissionProvider(permissionProvider);
+    }
   }
 
   getPrePattern(urlPattern) {
@@ -145,7 +150,7 @@ class Router {
     return this;
   }
 
-  registerRoute(method, pattern, routeSchema, handler, appendToSchema = false) {
+  registerRoute(method, pattern, routeSchema, handler, appendToSchema = true) {
     if (this._isLoaded) {
       throw new Error('Cannot add route to a loaded router.');
     }
@@ -163,7 +168,7 @@ class Router {
     if (schemaSpec.error) {
       error.push(schemaSpec.error);
     }
-    if (routeKey in this._routes){
+    if (this._routes[routeKey]){
       error.push(`Duplicate route ${routeKey}`);
     }
     if (!this._expressApp[route.method] || typeof this._expressApp[route.method] !== 'function') {
@@ -242,6 +247,8 @@ class Router {
     this._events.emit(Router.REGISTRATION_SUCCESS, route);
 
     if (appendToSchema) {
+      this.schema.paths = this.schema.paths || {};
+
       if (!this.schema.paths[pattern]) {
         this.schema.paths[pattern] = {}
       }
@@ -259,6 +266,10 @@ class Router {
 
   listen(port) {
     this._isLoaded = true;
+    console.log('Swag handler');
+    this._expressApp.get('/swagger', swaggerHandler(this.schema));
+    console.log('Done');
+
     this._expressApp.use((err, req, res, next) => {
       if (err.statusCode) {
         res = res.status(err.status);
