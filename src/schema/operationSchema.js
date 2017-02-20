@@ -23,5 +23,6 @@ module.exports = Joi.object({
     .items(Joi.string()
       .allow('http', 'https', 'ws', 'wss')),
   'deprecated': Joi.boolean(),
-  'security': securitySchema
+  'security': securitySchema,
+  'handler': Joi.func()
 });
