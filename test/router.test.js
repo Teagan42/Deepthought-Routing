@@ -265,7 +265,8 @@ describe('#Router', () => {
           };
         };
 
-        router.setPermissionProvider(permProvider);
+        router.setPermissionProvider(permProvider)
+          .listen();
 
         request(router._expressApp)
           .get('/1')
@@ -309,6 +310,188 @@ describe('#Router', () => {
               .to.equal(400);
 
             done();
+          });
+      });
+    });
+  });
+
+  describe('validates', () => {
+    const request = require('supertest');
+    const permProvider = () => {
+      return {
+        'api_key': [],
+        'auth': [
+          'write'
+        ]
+      };
+    };
+    let router = null;
+
+    describe('with security', () => {
+
+      beforeEach('setup router', () => {
+        router = new Router(require('express')());
+        router.registerRoute('get', '/:id', {
+            'summary': 'Test',
+            'description': 'Handle Test',
+            'parameters': [
+              {
+                'in': 'path',
+                'name': 'id',
+                'type': Joi.number(),
+                'required': true,
+                'description': 'Id'
+              },
+              {
+                'in': 'query',
+                'name': 'name',
+                'type': Joi.string(),
+                'required': false,
+                'description': 'Name'
+              }
+            ],
+            'security': {
+              'api_key': [],
+              'auth': [
+                'write'
+              ]
+            }
+          }, (req, res, next) => {
+            if (req.query && req.query.name) {
+              expect(req.query.name)
+                .to.be.a('string');
+              expect(req.query.name)
+                .to.equal('Bob');
+            }
+
+            return res.status(200).send();
+          })
+          .setPermissionProvider(permProvider)
+          .listen();
+      });
+
+      it('required fields', (done) => {
+        request(router._expressApp)
+          .get('/5')
+          .end((err, res) => {
+           try {
+             //noinspection BadExpressionStatementJS
+             expect(err)
+               .to.be.null;
+
+             expect(res)
+               .to.be.an('Object');
+             expect(res.status)
+               .to.equal(200);
+
+             done();
+           }
+           catch (e) {
+             done(e);
+           }
+          });
+      });
+
+      it('optional fields', (done) => {
+        request(router._expressApp)
+          .get('/5?name=Bob')
+          .end((err, res) => {
+            try {
+              //noinspection BadExpressionStatementJS
+              expect(err)
+                .to.be.null;
+
+              expect(res)
+                .to.be.an('Object');
+              expect(res.status)
+                .to.equal(200);
+
+              done();
+            }
+            catch (e) {
+              done(e);
+            }
+          });
+      });
+    });
+
+    describe('without security', () => {
+      beforeEach('setup router', () => {
+        router = new Router(require('express')());
+        router.registerRoute('get', '/:id', {
+          'summary': 'Test',
+          'description': 'Handle Test',
+          'parameters': [
+            {
+              'in': 'path',
+              'name': 'id',
+              'type': Joi.number(),
+              'required': true,
+              'description': 'Id'
+            },
+            {
+              'in': 'query',
+              'name': 'count',
+              'type': Joi.number(),
+              'required': false,
+              'description': 'Count'
+            }
+          ]
+        }, (req, res, next) => {
+          if (req.query && req.query.name) {
+            expect(req.query.count)
+              .to.be.a('number');
+            expect(req.query.count)
+              .to.equal(42);
+          }
+
+          return res.status(200).send();
+        })
+          .setPermissionProvider(permProvider)
+          .listen();
+      });
+
+      it('required fields', (done) => {
+        request(router._expressApp)
+          .get('/5')
+          .end((err, res) => {
+            try {
+              //noinspection BadExpressionStatementJS
+              expect(err)
+                .to.be.null;
+
+              expect(res)
+                .to.be.an('Object');
+              expect(res.status)
+                .to.equal(200);
+
+              done();
+            }
+            catch (e) {
+              done(e);
+            }
+          });
+      });
+
+      it('optional fields', (done) => {
+        request(router._expressApp)
+          .get('/5?count=42')
+          .end((err, res) => {
+            try {
+              //noinspection BadExpressionStatementJS
+              expect(err)
+                .to.be.null;
+
+              expect(res)
+                .to.be.an('Object');
+              expect(res.status)
+                .to.equal(200);
+
+              done();
+            }
+            catch (e) {
+              done(e);
+            }
           });
       });
     });
