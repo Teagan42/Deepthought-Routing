@@ -49,7 +49,6 @@ class Router {
 
     this._events = new EventEmitter();
     this._events.on(Router.REGISTRATION_SUCCESS, (route) => {
-      console.log(route);
       this.preRegisterRoute(route);
       this._expressApp[route.method](route.pattern, route.handler);
     });
@@ -105,15 +104,12 @@ class Router {
     const schemaSpec = operationSchema.validate(route.schema);
     const error = [];
     if (schemaSpec.error) {
-      console.log('Error', schemaSpec.error);
       error.push(schemaSpec.error);
     }
     if (routeKey in this._routes){
-      console.log('Error', 'dup');
       error.push(`Duplicate route ${routeKey}`);
     }
     if (!this._expressApp[route.method]) {
-      console.log('Error', 'method', route.method);
       error.push(`Incorrect method ${route.method}`);
     }
 
