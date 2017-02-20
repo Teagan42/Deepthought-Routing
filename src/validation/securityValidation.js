@@ -4,8 +4,8 @@ const _ = require('underscore');
 
 const securitySchema = require('../schema/securitySchema');
 
-// Verify result from authProvider
-const verifyAuthProviderResult = (permissions) => {
+// Verify result from permProvider
+const verifyPermProviderResult = (permissions) => {
   const result = securitySchema.validate(permissions);
 
   return result.error
@@ -45,10 +45,14 @@ const verifyPermissions = (securitySchema, permissions) => {
     : Promise.resolve(true);
 };
 
-module.exports = (authProvider, securitySchema, req) => {
+module.exports = (permProvider, securitySchema, req) => {
   if (!securitySchema || !Object.keys(securitySchema).length) {
     // No security defined, resolve
     return Promise.resolve({});
+  }
+  
+  if (!permProvider) {
+    return Promise.reject(new TypeError('No Permission Provider set'));
   }
 
   // Guarantee req exists and has proper pieces of info.
@@ -58,18 +62,18 @@ module.exports = (authProvider, securitySchema, req) => {
   });
 
   // Get the authentication result from the provider
-  const authResult = authProvider(req);
+  const authResult = permProvider(req);
 
   // Verify permissions either through promise or sync. call
   if (authResult instanceof Promise) {
     return authResult
-      .then(verifyAuthProviderResult)
+      .then(verifyPermProviderResult)
       .then(function (permissions) {
         return verifyPermissions(securitySchema, permissions);
       });
   }
   else {
-    return verifyAuthProviderResult(authResult)
+    return verifyPermProviderResult(authResult)
       .then(function (permissions) {
         return verifyPermissions(securitySchema, permissions);
       });
