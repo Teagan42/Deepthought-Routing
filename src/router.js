@@ -1,0 +1,188 @@
+"use strict";
+
+const HttpError = require('http-errors');
+const Express = require('express');
+const EventEmitter = require('events').EventEmitter;
+
+const operationSchema = require('./schema/operationSchema');
+const securityValidation = require('./validation/securityValidation');
+const parameterValidation = require('./validation/parameterValidation');
+
+class Router {
+  /**
+   * @return {string}
+   */
+  static get REGISTRATION_ERROR() {
+    return 'registrationError';
+  }
+
+  /**
+   * @return {string}
+   */
+  static get REGISTRATION_SUCCESS() {
+    return 'registeredSuccessfully';
+  }
+
+  get logger() {
+    return this._options.logger;
+  }
+
+  subscribe(event, listener) {
+    this._events.on(event, listener);
+
+    return this;
+  }
+
+  constructor(expressApp, config, permissionProvider) {
+    if (!expressApp) {
+      throw new TypeError('Express app is required to build router.');
+    }
+
+    this.setPermissionProvider(permissionProvider);
+
+    this._options = config || require('../config.json');
+    this._options.logger = this._options.logger || require('technicolor-logger');
+
+    this._expressApp = expressApp;
+    this._permissionProvider = permissionProvider;
+    this._routes = {};
+
+    this._events = new EventEmitter();
+    this._events.on(Router.REGISTRATION_SUCCESS, (route) => {
+      console.log(route);
+      this.preRegisterRoute(route);
+      this._expressApp[route.method](route.pattern, route.handler);
+    });
+    this._events.on(Router.REGISTRATION_ERROR, (route) => {
+      if (route instanceof Error) {
+        throw route;
+      }
+
+      throw new Error(`Unable to register route: ${JSON.stringify(route)}`);
+    });
+  }
+
+  getPrePattern(urlPattern) {
+    if (urlPattern === "/") return urlPattern;
+    return this._options.enforceLeadingSlash && !urlPattern.match(/^\//) ? '/' : '';
+  };
+
+  getPostPattern(urlPattern) {
+    return this._options.enforceTrailingSlash && !urlPattern.match(/\[\/]$/) ? '[/]?' : '';
+  };
+
+  applyPatternSettings(urlPattern) {
+    const prePattern = this.getPrePattern(urlPattern);
+    const postPattern = this.getPostPattern(urlPattern);
+    return prePattern + (urlPattern ? urlPattern.replace(/\/$/, '') + postPattern : '');
+  };
+
+  preRegisterRoute(route) {
+    if (this._options.logRouteRegistration) {
+      this.logger.info(JSON.stringify(route));
+    }
+  };
+
+  setPermissionProvider(permissionProvider) {
+    if (permissionProvider && typeof permissionProvider !== 'function') {
+      throw new TypeError('Permission provider must be a function');
+    }
+
+    this._permissionProvider = permissionProvider;
+
+    return this;
+  }
+
+  registerRoute(method, pattern, routeSchema, handler) {
+    const route = {
+      method: method.toLowerCase(),
+      pattern: pattern,
+      schema: routeSchema || {},
+    };
+
+    const routeKey = `${method}:${pattern}`;
+
+    const schemaSpec = operationSchema.validate(route.schema);
+    const error = [];
+    if (schemaSpec.error) {
+      console.log('Error', schemaSpec.error);
+      error.push(schemaSpec.error);
+    }
+    if (routeKey in this._routes){
+      console.log('Error', 'dup');
+      error.push(`Duplicate route ${routeKey}`);
+    }
+    if (!this._expressApp[route.method]) {
+      console.log('Error', 'method', route.method);
+      error.push(`Incorrect method ${route.method}`);
+    }
+
+    if (error.length) {
+      route.errors = error;
+      return this._events.emit(Router.REGISTRATION_ERROR, route);
+    }
+
+    route.schema = schemaSpec.value;
+    const handlers = [];
+
+    if (route.schema) {
+      if (route.schema.security && Object.keys(route.schema.security).length) {
+        // Secured route - add security check
+        handlers.push(
+          (req, res, next) => {
+            securityValidation(
+                this._permissionProvider,
+                route.schema,
+                req)
+              .then(() => {
+                next();
+              })
+              .catch((err) => {
+                return next(new HttpError.Unauthorized(err));
+              });
+          });
+      }
+
+      if (route.schema.parameters && route.schema.parameters.length) {
+        // Has parameters - add parameter check
+        handlers.push(
+          (req, res, next) => {
+            const errors = {};
+
+            try {
+              route.schema.parameters
+                .forEach((param) => {
+                  const result = parameterValidation(param, req);
+
+                  if (result !== true) {
+                    return new HttpError.BadRequest(result);
+                  }
+
+                  return next();
+                });
+            }
+            catch (err) {
+              console.error(err);
+              return next(new HttpError.InternalServerError());
+            }
+          }
+        )
+      }
+    }
+
+    if (handler && typeof handler === 'function') {
+      // Actual route handler
+      handlers.push(handler);
+    }
+
+    route.handler = handlers;
+
+    this._routes[routeKey] = route;
+
+    this._events.emit(Router.REGISTRATION_SUCCESS, route);
+
+    return this;
+  }
+}
+
+module.exports = Router;
