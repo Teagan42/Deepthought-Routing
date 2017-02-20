@@ -5,6 +5,7 @@ const Express = require('express');
 const EventEmitter = require('events').EventEmitter;
 
 const operationSchema = require('./schema/operationSchema');
+const infoSchema = require('./schema/infoSchema');
 const securityValidation = require('./validation/securityValidation');
 const parameterValidation = require('./validation/parameterValidation');
 
@@ -33,14 +34,18 @@ class Router {
     return this;
   }
 
-  constructor(expressApp, config, permissionProvider) {
+  constructor(expressApp, config, permissionProvider, schema) {
     if (!expressApp) {
       throw new TypeError('Express app is required to listen router.');
     }
 
+    this.loadSchema(schema);
+
     this._isLoaded = false;
 
-    this.setPermissionProvider(permissionProvider);
+    if (permissionProvider) {
+      this.setPermissionProvider(permissionProvider);
+    }
 
     this._options = config || require('../config.json');
     this._options.logger = this._options.logger || require('technicolor-logger');
@@ -84,6 +89,52 @@ class Router {
     }
   };
 
+  loadSchema(schema) {
+    if (!schema) {
+      this.schema = {};
+    }
+    else {
+      const valid = infoSchema.validate(schema);
+
+      if (valid.error) {
+        throw new TypeError(`Invalid info schema: ${valid.error}`);
+      }
+
+      this.schema = valid.value;
+
+      if (this.schema.permissionProvider) {
+        this.setPermissionProvider(this.schema.permissionProvider);
+      }
+
+      if (this.schema.paths) {
+        Object.keys(this.schema.paths)
+          .forEach((pattern) => {
+            const pathItems = this.schema.paths[pattern];
+
+            if (!pathItems) {
+              return;
+            }
+
+            Object.keys(pathItems)
+              .forEach((method) => {
+                const pathItem = pathItems[method];
+
+                if (!pathItem) {
+                  return;
+                }
+
+                this.registerRoute(
+                  method,
+                  pattern,
+                  pathItem,
+                  pathItem.handler,
+                  false);
+              });
+          });
+      }
+    }
+  }
+
   setPermissionProvider(permissionProvider) {
     if (permissionProvider && typeof permissionProvider !== 'function') {
       throw new TypeError('Permission provider must be a function');
@@ -94,10 +145,11 @@ class Router {
     return this;
   }
 
-  registerRoute(method, pattern, routeSchema, handler) {
+  registerRoute(method, pattern, routeSchema, handler, appendToSchema = false) {
     if (this._isLoaded) {
       throw new Error('Cannot add route to a loaded router.');
     }
+
     const route = {
       method: method.toLowerCase(),
       pattern: pattern,
@@ -114,7 +166,7 @@ class Router {
     if (routeKey in this._routes){
       error.push(`Duplicate route ${routeKey}`);
     }
-    if (!this._expressApp[route.method]) {
+    if (!this._expressApp[route.method] || typeof this._expressApp[route.method] !== 'function') {
       error.push(`Incorrect method ${route.method}`);
     }
 
@@ -124,6 +176,7 @@ class Router {
     }
 
     route.schema = schemaSpec.value;
+    handler = handler || route.schema.handler;
     const handlers = [];
 
     if (route.schema) {
@@ -175,12 +228,31 @@ class Router {
       // Actual route handler
       handlers.push(handler);
     }
+    else {
+      // Default handler - not sure if we want this
+      handlers.push((res, req, next) => {
+        res.status(200).send();
+      });
+    }
 
     route.handler = handlers;
 
     this._routes[routeKey] = route;
 
     this._events.emit(Router.REGISTRATION_SUCCESS, route);
+
+    if (appendToSchema) {
+      if (!this.schema.paths[pattern]) {
+        this.schema.paths[pattern] = {}
+      }
+      const path = this.schema.paths[pattern];
+
+      if (path[method]) {
+        throw new Error(`Path item already exists in schema: ${method}:${pattern}`);
+      }
+
+      path[method] = route.schema;
+    }
 
     return this;
   }
