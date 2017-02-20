@@ -29,7 +29,7 @@ const verifyPermissions = (securitySchema, permissions) => {
           return;
         }
 
-        if (!_.without(s, permissions[key]).length) {
+        if (_.every(s, (p) => permissions[key].includes(p))) {
           // We have all the permissions for this key
           return;
         }
