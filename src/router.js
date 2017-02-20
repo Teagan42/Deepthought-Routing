@@ -150,7 +150,11 @@ class Router {
     return this;
   }
 
-  registerRoute(method, pattern, routeSchema, handler, appendToSchema = true) {
+  registerRoute(method, pattern, routeSchema, handler, appendToSchema) {
+    appendToSchema = typeof appendToSchema === 'undefined'
+      ? true
+      : appendToSchema;
+
     if (this._isLoaded) {
       throw new Error('Cannot add route to a loaded router.');
     }
