@@ -6,185 +6,185 @@ const expect = Chai.expect;
 const Router = require('../src/router');
 
 describe('#Router', () => {
-  // describe('constructor', () => {
-  //   describe('errors', () => {
-  //     it('with no express app passed', () => {
-  //       expect(() => {
-  //           new Router(null);
-  //         })
-  //         .to.throw(TypeError);
-  //     });
-  //
-  //     it('with invalid permission provider', () => {
-  //       const app = require('express')();
-  //       expect(() => {
-  //           new Router(app, null, 'hello');
-  //         })
-  //         .to.throw(TypeError);
-  //     });
-  //   });
-  //
-  //   describe('config', () => {
-  //     let app = null;
-  //
-  //     beforeEach('load express', () => {
-  //       app = require('express')()
-  //     });
-  //
-  //     it('loads default', () => {
-  //       const defaultConfg = require('../config.json');
-  //
-  //       const router = new Router(app);
-  //
-  //       expect(router._options.enforceLeadingSlash)
-  //         .to.equal(defaultConfg.enforceLeadingSlash);
-  //
-  //       expect(router._options.enforceTrailingSlash)
-  //         .to.equal(defaultConfg.enforceTrailingSlash);
-  //     });
-  //
-  //     it('does not load default', () => {
-  //       const config = {
-  //         enforceLeadingSlash: false,
-  //         enforceTrailingSlash: true
-  //       };
-  //
-  //       const router = new Router(app, config);
-  //
-  //       expect(router._options.enforceLeadingSlash)
-  //         .to.equal(config.enforceLeadingSlash);
-  //
-  //       expect(router._options.enforceTrailingSlash)
-  //         .to.equal(config.enforceTrailingSlash);
-  //     });
-  //   });
-  // });
-  //
-  // describe('registerRoute', () => {
-  //   let app = null;
-  //
-  //   const express = require('express');
-  //
-  //   beforeEach('load express', () => {
-  //     app = express();
-  //   });
-  //
-  //   describe('errors', () => {
-  //     let router = null;
-  //
-  //     beforeEach('load router', () => {
-  //       router = new Router(app);
-  //     });
-  //
-  //     it('with null route schema', () => {
-  //       const registerRoute = () => {
-  //         router.registerRoute('get', '/', null, null);
-  //       };
-  //       expect(registerRoute).to.throw(Error);
-  //     });
-  //
-  //     it('with empty route schema', () => {
-  //       const registerRoute = () => {
-  //         router.registerRoute('get', '/', {}, null);
-  //       };
-  //       expect(registerRoute).to.throw(Error);
-  //     });
-  //
-  //     it('with duplicate routes', () => {
-  //       const registerRoute = () => {
-  //         router.registerRoute('GET', '/', {
-  //           'summary': 'Test Route',
-  //           'description': 'Test Route'
-  //         }, null);
-  //       };
-  //
-  //       expect(registerRoute).to.not.throw(Error);
-  //       expect(registerRoute).to.throw(Error);
-  //     });
-  //
-  //     it('with incorrect method', () => {
-  //       const registerRoute = () => {
-  //         router.registerRoute('FAKE', '/', {
-  //           'summary': 'Test Route',
-  //           'description': 'Test Route'
-  //         }, null);
-  //       };
-  //
-  //       expect(registerRoute).to.throw(Error);
-  //     });
-  //   });
-  //
-  //   describe('succeeds', () => {
-  //     let router = null;
-  //
-  //     beforeEach('setup router', () => {
-  //       router = new Router(require('express')());
-  //     });
-  //
-  //     it('with one route', () => {
-  //       const registerRoute = () => {
-  //        router.registerRoute('get', '/', {
-  //          'summary': 'Root',
-  //          'description': 'Root path'
-  //        });
-  //       };
-  //
-  //       expect(registerRoute).to.not.throw(Error);
-  //       expect(router._routes)
-  //         .to.be.an('Object');
-  //       expect(Object.keys(router._routes).length)
-  //         .to.equal(1);
-  //     });
-  //
-  //     it('with two routes', () => {
-  //       const registerRoute = (path) => {
-  //         return () => {
-  //           router.registerRoute('get', path, {
-  //             'summary': 'Root',
-  //             'description': 'Root path'
-  //           });
-  //         };
-  //       };
-  //
-  //       expect(registerRoute('/'))
-  //         .to.not.throw(Error);
-  //       expect(registerRoute('/another'))
-  //         .to.not.throw(Error);
-  //     });
-  //
-  //     it('with two routes, different methods', () => {
-  //       const registerRoute = (method, path) => {
-  //         return () => {
-  //           router.registerRoute('get', path, {
-  //             'summary': 'Root',
-  //             'description': 'Root path'
-  //           });
-  //         };
-  //       };
-  //
-  //       expect(registerRoute('get', '/'))
-  //         .to.not.throw(Error);
-  //       expect(registerRoute('post', '/another'))
-  //         .to.not.throw(Error);
-  //     });
-  //
-  //     it('with one route, different methods', () => {
-  //       const registerRoute = (method) => {
-  //         return () => {
-  //           router.registerRoute(method, '/', {
-  //             'summary': 'Root',
-  //             'description': 'Root path'
-  //           });
-  //         };
-  //       };
-  //
-  //       expect(registerRoute('get'))
-  //         .to.not.throw(Error);
-  //       expect(registerRoute('post'))
-  //         .to.not.throw(Error);
-  //     });
-  //   });
-  // });
+  describe('constructor', () => {
+    describe('errors', () => {
+      it('with no express app passed', () => {
+        expect(() => {
+            new Router(null);
+          })
+          .to.throw(TypeError);
+      });
+
+      it('with invalid permission provider', () => {
+        const app = require('express')();
+        expect(() => {
+            new Router(app, null, 'hello');
+          })
+          .to.throw(TypeError);
+      });
+    });
+
+    describe('config', () => {
+      let app = null;
+
+      beforeEach('load express', () => {
+        app = require('express')()
+      });
+
+      it('loads default', () => {
+        const defaultConfg = require('../config.json');
+
+        const router = new Router(app);
+
+        expect(router._options.enforceLeadingSlash)
+          .to.equal(defaultConfg.enforceLeadingSlash);
+
+        expect(router._options.enforceTrailingSlash)
+          .to.equal(defaultConfg.enforceTrailingSlash);
+      });
+
+      it('does not load default', () => {
+        const config = {
+          enforceLeadingSlash: false,
+          enforceTrailingSlash: true
+        };
+
+        const router = new Router(app, config);
+
+        expect(router._options.enforceLeadingSlash)
+          .to.equal(config.enforceLeadingSlash);
+
+        expect(router._options.enforceTrailingSlash)
+          .to.equal(config.enforceTrailingSlash);
+      });
+    });
+  });
+
+  describe('registerRoute', () => {
+    let app = null;
+
+    const express = require('express');
+
+    beforeEach('load express', () => {
+      app = express();
+    });
+
+    describe('errors', () => {
+      let router = null;
+
+      beforeEach('load router', () => {
+        router = new Router(app);
+      });
+
+      it('with null route schema', () => {
+        const registerRoute = () => {
+          router.registerRoute('get', '/', null, null);
+        };
+        expect(registerRoute).to.throw(Error);
+      });
+
+      it('with empty route schema', () => {
+        const registerRoute = () => {
+          router.registerRoute('get', '/', {}, null);
+        };
+        expect(registerRoute).to.throw(Error);
+      });
+
+      it('with duplicate routes', () => {
+        const registerRoute = () => {
+          router.registerRoute('GET', '/', {
+            'summary': 'Test Route',
+            'description': 'Test Route'
+          }, null);
+        };
+
+        expect(registerRoute).to.not.throw(Error);
+        expect(registerRoute).to.throw(Error);
+      });
+
+      it('with incorrect method', () => {
+        const registerRoute = () => {
+          router.registerRoute('FAKE', '/', {
+            'summary': 'Test Route',
+            'description': 'Test Route'
+          }, null);
+        };
+
+        expect(registerRoute).to.throw(Error);
+      });
+    });
+
+    describe('succeeds', () => {
+      let router = null;
+
+      beforeEach('setup router', () => {
+        router = new Router(require('express')());
+      });
+
+      it('with one route', () => {
+        const registerRoute = () => {
+         router.registerRoute('get', '/', {
+           'summary': 'Root',
+           'description': 'Root path'
+         });
+        };
+
+        expect(registerRoute).to.not.throw(Error);
+        expect(router._routes)
+          .to.be.an('Object');
+        expect(Object.keys(router._routes).length)
+          .to.equal(1);
+      });
+
+      it('with two routes', () => {
+        const registerRoute = (path) => {
+          return () => {
+            router.registerRoute('get', path, {
+              'summary': 'Root',
+              'description': 'Root path'
+            });
+          };
+        };
+
+        expect(registerRoute('/'))
+          .to.not.throw(Error);
+        expect(registerRoute('/another'))
+          .to.not.throw(Error);
+      });
+
+      it('with two routes, different methods', () => {
+        const registerRoute = (method, path) => {
+          return () => {
+            router.registerRoute('get', path, {
+              'summary': 'Root',
+              'description': 'Root path'
+            });
+          };
+        };
+
+        expect(registerRoute('get', '/'))
+          .to.not.throw(Error);
+        expect(registerRoute('post', '/another'))
+          .to.not.throw(Error);
+      });
+
+      it('with one route, different methods', () => {
+        const registerRoute = (method) => {
+          return () => {
+            router.registerRoute(method, '/', {
+              'summary': 'Root',
+              'description': 'Root path'
+            });
+          };
+        };
+
+        expect(registerRoute('get'))
+          .to.not.throw(Error);
+        expect(registerRoute('post'))
+          .to.not.throw(Error);
+      });
+    });
+  });
 
   describe('invalidates', () => {
     describe('missing', () => {
@@ -221,74 +221,67 @@ describe('#Router', () => {
               ]
             }
           }, (res, req, next) => {
-          if (next) {
-            next();
-          }
-        });
+            return res.send(req);
+          });
       });
-      //
-      // it('security key', (done) => {
-      //   const permProvider = () => {
-      //     return {
-      //       'api_key': []
-      //     };
-      //   };
-      //
-      //   next = (data) => {
-      //     expect(data)
-      //       .to.be.an('Error');
-      //   };
-      //
-      //   router.setPermissionProvider(permProvider);
-      //
-      //   request(router._expressApp)
-      //     .get('/1')
-      //     .end((err, res) => {
-      //       //noinspection BadExpressionStatementJS
-      //       expect(err)
-      //         .to.be.null;
-      //
-      //       expect(res)
-      //         .to.be.an('Object');
-      //       expect(res.status)
-      //         .to.equal(401);
-      //
-      //       done();
-      //     });
-      // });
-      //
-      // it('security key permission', (done) => {
-      //   const permProvider = () => {
-      //     return {
-      //       'api_key': [],
-      //       'auth': [
-      //         'read'
-      //       ]
-      //     };
-      //   };
-      //
-      //   next = (data) => {
-      //     expect(data)
-      //       .to.be.an('Error');
-      //   };
-      //
-      //   router.setPermissionProvider(permProvider);
-      //
-      //   request(router._expressApp)
-      //     .get('/1')
-      //     .end((err, res) => {
-      //       //noinspection BadExpressionStatementJS
-      //       expect(err)
-      //         .to.be.null;
-      //
-      //       expect(res)
-      //         .to.be.an('Object');
-      //       expect(res.status)
-      //         .to.equal(401);
-      //
-      //       done();
-      //     });
-      // });
+
+      it('security key', (done) => {
+        const permProvider = () => {
+          return {
+            'api_key': []
+          };
+        };
+
+        next = (data) => {
+          expect(data)
+            .to.be.an('Error');
+        };
+
+        router.setPermissionProvider(permProvider);
+
+        request(router._expressApp)
+          .get('/1')
+          .end((err, res) => {
+            //noinspection BadExpressionStatementJS
+            expect(err)
+              .to.be.null;
+
+            expect(res)
+              .to.be.an('Object');
+            expect(res.status)
+              .to.equal(401);
+
+            done();
+          });
+      });
+
+      it('security key permission', (done) => {
+        const permProvider = () => {
+          return {
+            'api_key': [],
+            'auth': [
+              'read'
+            ]
+          };
+        };
+
+        router.setPermissionProvider(permProvider);
+
+        request(router._expressApp)
+          .get('/1')
+          .end((err, res) => {
+            //noinspection BadExpressionStatementJS
+            expect(err)
+              .to.be.null;
+
+            expect(res)
+              .to.be.an('Object');
+            expect(res.status)
+              .to.equal(401);
+
+            done();
+          });
+      });
 
       it('incorrect parameter type', (done) => {
         const permProvider = () => {
@@ -300,12 +293,8 @@ describe('#Router', () => {
           };
         };
 
-        next = (data) => {
-          expect(data)
-            .to.be.an('Error');
-        };
-
-        router.setPermissionProvider(permProvider);
+        router.setPermissionProvider(permProvider)
+          .listen();
 
         request(router._expressApp)
           .get('/abc')
