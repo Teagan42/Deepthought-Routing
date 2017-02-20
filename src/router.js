@@ -128,7 +128,7 @@ class Router {
           (req, res, next) => {
             securityValidation(
                 this._permissionProvider,
-                route.schema,
+                route.schema.security,
                 req)
               .then(() => {
                 next();
