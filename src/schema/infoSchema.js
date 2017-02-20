@@ -13,5 +13,6 @@ module.exports = Joi.object({
   'termsOfService': Joi.string(),
   'contact': contactSchema.required(),
   'license': licenseSchema,
-  'paths': pathsSchema
+  'paths': pathsSchema,
+  'permissionProvider': Joi.func()
 });
