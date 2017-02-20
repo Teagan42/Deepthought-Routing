@@ -35,8 +35,10 @@ class Router {
 
   constructor(expressApp, config, permissionProvider) {
     if (!expressApp) {
-      throw new TypeError('Express app is required to build router.');
+      throw new TypeError('Express app is required to listen router.');
     }
+
+    this._isLoaded = false;
 
     this.setPermissionProvider(permissionProvider);
 
@@ -93,6 +95,9 @@ class Router {
   }
 
   registerRoute(method, pattern, routeSchema, handler) {
+    if (this._isLoaded) {
+      throw new Error('Cannot add route to a loaded router.');
+    }
     const route = {
       method: method.toLowerCase(),
       pattern: pattern,
@@ -178,6 +183,20 @@ class Router {
     this._events.emit(Router.REGISTRATION_SUCCESS, route);
 
     return this;
+  }
+
+  listen(port) {
+    this._isLoaded = true;
+    this._expressApp.use((err, req, res, next) => {
+      if (err.statusCode) {
+        res = res.status(err.status);
+      }
+      return res.send(err.message);
+    });
+
+    if (port) {
+      this._expressApp.listen(port);
+    }
   }
 }
 
