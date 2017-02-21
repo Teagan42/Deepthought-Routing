@@ -205,7 +205,7 @@ class Router {
         // Has parameters - add parameter check
         handlers.push(
           (req, res, next) => {
-            const errors = {};
+            const errors = [];
 
             try {
               route.schema.parameters
@@ -213,11 +213,15 @@ class Router {
                   const result = parameterValidation(param, req);
 
                   if (result !== true) {
-                    return next(new HttpError.BadRequest(JSON.stringify(result)));
+                    errors.push(result);
                   }
-
-                  return next();
                 });
+
+              if (errors.length) {
+                return next(new HttpError.BadRequest(JSON.stringify(errors)));
+              }
+
+              return next();
             }
             catch (err) {
               console.error(err);
