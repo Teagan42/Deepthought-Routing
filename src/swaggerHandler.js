@@ -31,11 +31,12 @@ const removePermissionProvider = (info) => {
   return infoCopy;
 };
 
-module.exports = curry((schema, req, res, next) => {
+module.exports = curry((schema, options, req, res, next) => {
   if (!schema) {
     return next(new HttpError.InternalServerError('No swagger schema defined'));
   }
 
+  const excludedUris = options.excludedUri;
   const swagDoc = removePermissionProvider(schema);
 
   if (swagDoc.paths) {
@@ -47,6 +48,10 @@ module.exports = curry((schema, req, res, next) => {
 
         Object.keys(path)
           .forEach((method) => {
+            if (excludedUris && excludedUris.indexOf(path) !== -1) {
+              // Exclude this URI
+              return;
+            }
             const op = path[method];
 
             if (op.parameters) {

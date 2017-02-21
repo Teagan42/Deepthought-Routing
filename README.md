@@ -53,47 +53,29 @@ You can opt to include swagger documentation in your application.  This option a
 In your app.js file, include the following code beneath the require statements.
 
 ```
-let swaggerDefinition = {
-  info: {
-    title: 'Your Swagger Documentation Title',
-    version: '0.0.0',
-    description: 'A Fancy Description',
-  }
-  , swagger: "2.0"
-  , host: app.get((req, res) => { return req.url })
-  , basePath: '/'
-};
-
 // options for the swagger docs
 let swaggerOptions = {
-    swaggerDefinition: swaggerDefinition
-  , excludedUris: ['/routes', '/']
-  , apis: []
+      uri: '/swagger'
+    , excludedUris: ['/routes', '/']
 };
 
 const routeConfig = {
       "enforceTrailingSlash": true
     , "enforceLeadingSlash": true
     , "logRouteRegistration": true
-    , "routesUri": '/routes'
-    , "swaggerUri": "/"
     , "swaggerOptions": swaggerOptions
-    , models: routes.models
 };
 ```
 
 ## Configurable options:
-1. Your Documentation's title, version, and description in the ``` swaggerDefinition``` object. Ensure that the ```host``` and ```basePath``` correlate to your API's index route. You may hard-code the ```host```.
-
-2. You may exclude routes from documentation by adding them to the ```excludedUris``` array on the ```swaggerOptions``` object.
-
-3. Your ```swaggerUri``` value is the route at which you may view the JSON formatted for Swagger.
+- You may exclude routes from documentation by adding them to the ```excludedUris``` array on the ```swaggerOptions``` object.
+- Your ```swaggerOptions.uri``` value is the route at which you may view the JSON formatted for Swagger.
 
 ## Viewing Swagger documentation
 
-1. In your ```public``` folder, copy over the ```dist``` folder from https://github.com/swagger-api/swagger-ui and rename it to ```api-docs``` modify the url declaration line in the ```index.html``` line to match the ```swaggerUri``` URL.
+1. In your ```public``` folder, copy over the ```dist``` folder from https://github.com/swagger-api/swagger-ui and rename it to ```api-docs``` modify the url declaration line in the ```index.html``` line to match the ```swaggerOptions.uri``` URL.
 ```
-if (url && url.length > 1) {
+      if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
         url = "/"; // your url here

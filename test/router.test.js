@@ -338,7 +338,13 @@ describe('#Router', () => {
     let router = null
 
     beforeEach('setup router', () => {
-      router = new Router(require('express')(), {}, null, schema);
+      router = new Router(
+        require('express')(),
+        {
+          swaggerOptions: {
+            uri: '/swagger'
+          }
+        }, schema);
       router.listen();
     });
 
