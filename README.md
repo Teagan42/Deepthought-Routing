@@ -69,13 +69,13 @@ const routeConfig = {
 
 ## Configurable options:
 - You may exclude routes from documentation by adding them to the ```excludedUris``` array on the ```swaggerOptions``` object.
-- Your ```swaggerUri``` value is the route at which you may view the JSON formatted for Swagger.
+- Your ```swaggerOptions.uri``` value is the route at which you may view the JSON formatted for Swagger.
 
 ## Viewing Swagger documentation
 
-1. In your ```public``` folder, copy over the ```dist``` folder from https://github.com/swagger-api/swagger-ui and rename it to ```api-docs``` modify the url declaration line in the ```index.html``` line to match the ```swaggerUri``` URL.
+1. In your ```public``` folder, copy over the ```dist``` folder from https://github.com/swagger-api/swagger-ui and rename it to ```api-docs``` modify the url declaration line in the ```index.html``` line to match the ```swaggerOptions.uri``` URL.
 ```
-if (url && url.length > 1) {
+      if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
         url = "/"; // your url here
