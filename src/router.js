@@ -97,46 +97,46 @@ class Router {
   loadSchema(schema) {
     if (!schema) {
       this.schema = {};
+      return;
     }
-    else {
-      const valid = infoSchema.validate(schema);
 
-      if (valid.error) {
-        throw new TypeError(`Invalid info schema: ${valid.error}`);
-      }
+    const valid = infoSchema.validate(schema);
 
-      this.schema = valid.value;
+    if (valid.error) {
+      throw new TypeError(`Invalid info schema: ${valid.error}`);
+    }
 
-      if (this.schema.permissionProvider) {
-        this.setPermissionProvider(this.schema.permissionProvider);
-      }
+    this.schema = valid.value;
 
-      if (this.schema.paths) {
-        Object.keys(this.schema.paths)
-          .forEach((pattern) => {
-            const pathItems = this.schema.paths[pattern];
+    if (this.schema.permissionProvider) {
+      this.setPermissionProvider(this.schema.permissionProvider);
+    }
 
-            if (!pathItems) {
-              return;
-            }
+    if (this.schema.paths) {
+      Object.keys(this.schema.paths)
+        .forEach((pattern) => {
+          const pathItems = this.schema.paths[pattern];
 
-            Object.keys(pathItems)
-              .forEach((method) => {
-                const pathItem = pathItems[method];
+          if (!pathItems) {
+            return;
+          }
 
-                if (!pathItem) {
-                  return;
-                }
+          Object.keys(pathItems)
+            .forEach((method) => {
+              const pathItem = pathItems[method];
 
-                this.registerRoute(
-                  method,
-                  pattern,
-                  pathItem,
-                  pathItem.handler,
-                  false);
-              });
-          });
-      }
+              if (!pathItem) {
+                return;
+              }
+
+              this.registerRoute(
+                method,
+                pattern,
+                pathItem,
+                pathItem.handler,
+                false);
+            });
+        });
     }
   }
 
@@ -238,9 +238,9 @@ class Router {
       handlers.push(handler);
     }
     else {
-      // Default handler - not sure if we want this
+      // No default handler - return 501
       handlers.push((res, req, next) => {
-        res.status(200).send();
+        res.status(501).send();
       });
     }
 
