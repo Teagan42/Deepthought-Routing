@@ -40,7 +40,7 @@ class Router {
 
   }
 
-  constructor(expressApp, config, permissionProvider, schema) {
+  constructor(expressApp, config, schema) {
     if (!expressApp) {
       throw new TypeError('Express app is required to listen router.');
     }
@@ -49,7 +49,6 @@ class Router {
     this._options.logger = this._options.logger || require('technicolor-logger');
 
     this._expressApp = expressApp;
-    this._permissionProvider = permissionProvider;
     this._routes = {};
     this._isLoaded = false;
 
@@ -67,10 +66,6 @@ class Router {
     });
 
     this.loadSchema(schema);
-
-    if (permissionProvider) {
-      this.setPermissionProvider(permissionProvider);
-    }
   }
 
   getPrePattern(urlPattern) {
@@ -270,9 +265,13 @@ class Router {
 
   listen(port) {
     this._isLoaded = true;
-    console.log('Swag handler');
-    this._expressApp.get('/swagger', swaggerHandler(this.schema));
-    console.log('Done');
+
+    if (this._options.swaggerOptions) {
+      const swagOptions = this._options.swaggerOptions;
+      this._expressApp.get(
+        this.applyPatternSettings(swagOptions.uri),
+        swaggerHandler(this.schema, swagOptions));
+    }
 
     this._expressApp.use((err, req, res, next) => {
       if (err.statusCode) {
