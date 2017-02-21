@@ -5,7 +5,6 @@ const HttpError = require('http-errors');
 const _ = require('underscore');
 
 const getSwagDoc = (swagDoc, excludedUris) => {
-  console.log('getSwagDoc', swagDoc);
   return {
     swagger: '2.0',
     info: getSwagInfo(swagDoc) || {},
@@ -14,7 +13,6 @@ const getSwagDoc = (swagDoc, excludedUris) => {
 }
 
 const getSwagInfo = (documentation) => {
-  console.log('getSwagInfo', documentation);
   const swagDoc = documentation || {};
   return {
     title: swagDoc.title,
@@ -26,7 +24,6 @@ const getSwagInfo = (documentation) => {
 };
 
 const getSwagPaths = (pathsDoc, excludedUris) => {
-  console.log('getSwagPaths', pathsDoc);
   const swagDoc = pathsDoc || {};
   if (!Object.keys(swagDoc).length) {
     return {};
@@ -52,7 +49,7 @@ const getSwagPaths = (pathsDoc, excludedUris) => {
     });
 
   return result;
-}
+};
 
 const getSwagOperation = (operationDoc) => {
   const swagDoc = operationDoc || {};
@@ -92,8 +89,6 @@ const getSwagParam = (parameterDoc) => {
     return {};
   }
 
-  console.log('getSwagParam', swagDoc, swagDoc.type._type);
-
   const param = {
     name: swagDoc.name,
     in: swagDoc.in,
@@ -101,7 +96,7 @@ const getSwagParam = (parameterDoc) => {
     description: swagDoc.description,
     required: swagDoc.required
   };
-  console.log('getSwagParam', 'result', param);
+
   return param;
 };
 
