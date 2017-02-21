@@ -23,7 +23,7 @@ new Router(app)
         title: 'My Api',
         description: 'Example Deepthought Routing',
         contact: {
-            name: 'Some BOdy',
+            name: 'Some Body',
             email: 'your@email.com',
             url: 'https://mysite.com'
         },
