@@ -1,6 +1,6 @@
 {
   "name": "deepthought-routing",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Dynamic routing handler for express.js",
   "main": "index.js",
   "scripts": {
