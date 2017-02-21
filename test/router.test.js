@@ -338,13 +338,12 @@ describe('#Router', () => {
     let router = null
 
     beforeEach('setup router', () => {
-      router = new Router(
-        require('express')(),
-        {
-          swaggerOptions: {
-            uri: '/swagger'
-          }
-        }, schema);
+      router = new Router(require('express')(), {
+        swaggerOptions: {
+          uri: '/swagger',
+          excludedUris: []
+        }
+      }, schema);
       router.listen();
     });
 
@@ -361,14 +360,18 @@ describe('#Router', () => {
 
             expect(res.body)
               .to.be.an('Object');
+            console.log(res);
 
-            expect(res.body)
+            expect(res.body.info)
+              .to.be.an('Object');
+
+            expect(res.body.info)
               .to.have.property('title');
 
-            expect(res.body)
+            expect(res.body.info)
               .to.have.property('description');
 
-            expect(res.body)
+            expect(res.body.info)
               .to.have.property('contact');
 
             expect(res.body)
