@@ -10,7 +10,7 @@ const getSwagDoc = (swagDoc, excludedUris) => {
     info: getSwagInfo(swagDoc) || {},
     paths: getSwagPaths(swagDoc.paths, excludedUris)
   };
-}
+};
 
 const getSwagInfo = (documentation) => {
   const swagDoc = documentation || {};
