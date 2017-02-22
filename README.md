@@ -71,6 +71,7 @@ const routeConfig = {
 ## Configurable options:
 - You may exclude routes from documentation by adding them to the ```excludedUris``` array on the ```swaggerOptions``` object.
 - Your ```swaggerOptions.uri``` value is the route at which you may view the JSON formatted for Swagger.
+- The `cors` option enables cross site requests (good if the swagger ui is hosted elsewhere), this can be `true` to whitelist all sites or an array of white listed hosts.
 
 ## Viewing Swagger documentation
 
