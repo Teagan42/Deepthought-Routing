@@ -63,6 +63,35 @@ const routeConfig = {
       "enforceTrailingSlash": true
     , "enforceLeadingSlash": true
     , "logRouteRegistration": true
+    , "loggerConfig": {
+       "loggers": [{
+           "name": "console",
+           "levels": [
+               "INFO",
+               "WARN",
+               "DEBUG",
+               "ERROR",
+               "FATAL"
+           ],
+           "colors": [
+               {
+                   "level": "INFO",
+                   "color": "gray"
+               },
+               {
+                   "level": "WARN",
+                   "color": "yellow"
+               },
+               {
+                   "level": "DEBUG",
+                   "color": "green"
+               },
+               {
+                   "level": "ERROR",
+                   "color": "red"
+               }
+           ]}
+       ]}
     , "swaggerOptions": swaggerOptions
 };
 ```

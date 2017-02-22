@@ -27,7 +27,7 @@ class Router {
   }
 
   get logger() {
-    return this._options.logger;
+    return this._options.logger || console;
   }
 
   subscribe(event, listener) {
@@ -47,31 +47,7 @@ class Router {
 
     this._options = config || require('../config.json');
     this._options.logger = require('technicolor-logger');
-    this.logger.init(this._options.loggerConfig || {
-        "loggers": [{
-          "name": "console",
-          "levels": [
-            "INFO",
-            "WARN",
-            "DEBUG",
-            "ERROR",
-            "FATAL"
-          ],
-          "colors": [{
-            "level": "INFO",
-            "color": "gray"
-          }, {
-            "level": "WARN",
-            "color": "yellow"
-          }, {
-            "level": "DEBUG",
-            "color": "green"
-          }, {
-            "level": "ERROR",
-            "color": "red"
-          }]
-        }]
-    });
+    this.logger.init(this._options.loggerConfig || {});
 
     this._expressApp = expressApp;
     this._routes = {};
@@ -310,6 +286,7 @@ class Router {
     });
 
     if (port) {
+      this.logger.info(`Server listening on ${port}`);
       this._expressApp.listen(port);
     }
   }
