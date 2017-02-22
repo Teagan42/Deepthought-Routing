@@ -57,6 +57,7 @@ In your app.js file, include the following code beneath the require statements.
 let swaggerOptions = {
       uri: '/swagger'
     , excludedUris: ['/routes', '/']
+    , cors: true
 };
 
 const routeConfig = {

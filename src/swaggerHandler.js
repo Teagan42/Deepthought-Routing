@@ -105,6 +105,11 @@ module.exports = curry((schema, options, req, res, next) => {
     return next(new HttpError.InternalServerError('No swagger schema defined'));
   }
 
+  if (options.cors) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  }
+
   const excludedUris = options.excludedUri;
 
   res.status(200)
