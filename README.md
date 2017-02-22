@@ -2,30 +2,133 @@
 
 Enforce best practices onto your API at compile time, utilizing this wrapper on top of the Express framework
 
+# Install
+`npm install deepthought-routing`
+
 # Usage
+Enter a JSON version of your swagger documentation and it will validate for you!
 
+## Example
 ```
-
+var rootHandler = require('./routes/root/handler.js');
+var accountHandler = require('./routes/accounts/handler.js);
+var permissionProvider = require('./services/permissionProvider.js');
 var express = require('express');
 var app = express();
-var deepthought = require('../index.js');
+var Router = require('deepthought-routing');
+var Joi = require('joi');
 
-var apiModel = deepthought.setup(app);
-
-apiModel.registerPublicRoute(
-    'get'
-    , 'Hello World Example Route'
-    , '/'
-    , function(req, res, next) { res.send('Hello World'); next();}
-    , [] // this is an array of parameter objects, see below
-    , 'This sample route is designed to meet all your hello world API needs.');
-
-app.listen(5000, function () {
-  console.log('Example app listening on port 5000!');
-});
-
+new Router(app)
+    .loadSchema({
+        title: 'My Api',
+        description: 'Example Deepthought Routing',
+        contact: {
+            name: 'Some Body',
+            email: 'your@email.com',
+            url: 'https://mysite.com'
+        },
+        permissionProvider: permissionProvider
+        paths: {
+            '/': {
+                'get': {
+                    tags: ['Tag','Another', 'Stuff'],
+                    summary: 'Root Path',
+                    description: 'Example path',
+                    consumes: ['application/json'],
+                    produces: ['application/json'],
+                    schemes: ['http', 'https'],
+                    deprecated: false,
+                    handler: rootHandler
+                }
+            },
+            '/accounts/:id': {
+                'get': {
+                    tags: ['Tag','Another', 'Stuff'],
+                    summary: 'Get account',
+                    description: 'Retrieves an account',
+                    consumes: ['application/json'],
+                    produces: ['application/json'],
+                    schemes: ['http', 'https'],
+                    deprecated: false,
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            type: Joi.number(),
+                            description: 'Account id',
+                            required: true
+                        }
+                    ],
+                    handler: accountHandler.retrieve
+                },
+                'post': {
+                    tags: ['Tag','Another', 'Stuff'],
+                    summary: 'Create account',
+                    description: 'Makes a new account',
+                    consumes: ['application/json'],
+                    produces: ['application/json'],
+                    schemes: ['http', 'https'],
+                    deprecated: false,
+                    parameters: [
+                        {
+                            name: 'name',
+                            in: 'body',
+                            type: Joi.string(),
+                            description: 'Account name',
+                            required: true
+                        },
+                        {
+                            name: 'password',
+                            in: 'body',
+                            type: Joi.string()
+                                .min(4)
+                                .max(10,
+                            description: 'Account password',
+                            required: true
+                        },
+                        {
+                            name: 'displayName',
+                            in: 'body',
+                            type: Joi.string()
+                                .max(128),
+                            description: 'Account display name',
+                            required: false
+                        }
+                    ],
+                    security: {
+                        'api_key': [],
+                        'account': [
+                            'account:write'
+                         ]
+                    },
+                    handler: accountHandler.retrieve
+                }
+            }
+        }
+    })
+    .listen(3000);
 
 ```
+## Permissions Handling
+Deepthought-Routing is set up to validate the security for each endpoint.
+
+To validate security, a `permissionProvider` is required in the root schema definition.
+The permission provider can either:
+- Return a promise that resolves to an Object
+- Return an Object
+
+The resolution Object of the permissionProvider must match the following schema:
+ 
+```javascript
+Joi.object()
+  .pattern(
+    /.*/,
+    Joi.array().items(Joi.string()));
+```
+This means that the object's key values must be string arrays. It will match this to the
+schema passed in to the operation's `security` field.
+
+
 ## Optional Parameter objects
 For Swagger to generate documentation for the array of parameters, the documentation needs the following structure:
 
@@ -45,6 +148,10 @@ For more documentation see: http://swagger.io/specification/#parameterObject
 
 If no parameters, this must be an empty array.
 
+# Notes
+- Once the `Router.listen` method is invoked, you may not register any new routes through the router.
+- You may invoke `Router.registerRoute(method, path, schema, [handler])` instead of using the monolithic schema.
+- The `type` in the operation schema must be a [joi object](https://www.npmjs.com/package/joi)
 
 # Optional Swagger UI Implementation
 
@@ -81,7 +188,7 @@ const routeConfig = {
         url = "/"; // your url here
       }
 ```
-After starting your app, navigate to ```/api-docs``` (ie. http//localhost:3000/api-docs) and revel in your automatic documentation creation!
+After starting your app, navigate to ```/api-docs``` (ie. http//localhost:3000/swagger) and revel in your automatic documentation creation!
 
 
 # Selling points
@@ -96,8 +203,3 @@ Deepthought also allows you to standardize route security by enforcing secured r
 
 Future feature will be the ability to integrate swagger.io documentation directly into your app, so that your documentation
 always stays up to date with your code.
-
-
-# Install
-
-npm step here
