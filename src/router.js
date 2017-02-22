@@ -46,7 +46,32 @@ class Router {
     }
 
     this._options = config || require('../config.json');
-    this._options.logger = this._options.logger || require('technicolor-logger');
+    this._options.logger = require('technicolor-logger');
+    this.logger.init(this._options.loggerConfig || {
+        "loggers": [{
+          "name": "console",
+          "levels": [
+            "INFO",
+            "WARN",
+            "DEBUG",
+            "ERROR",
+            "FATAL"
+          ],
+          "colors": [{
+            "level": "INFO",
+            "color": "gray"
+          }, {
+            "level": "WARN",
+            "color": "yellow"
+          }, {
+            "level": "DEBUG",
+            "color": "green"
+          }, {
+            "level": "ERROR",
+            "color": "red"
+          }]
+        }]
+    });
 
     this._expressApp = expressApp;
     this._routes = {};
@@ -85,7 +110,11 @@ class Router {
 
   preRegisterRoute(route) {
     if (this._options.logRouteRegistration) {
-      this.logger.info(JSON.stringify(route));
+      this.logger.info(JSON.stringify({
+        method: route.method,
+        pattern: route.pattern,
+        summary: route.schema.summary
+      }));
     }
   };
 
