@@ -27,7 +27,7 @@ class Router {
   }
 
   get logger() {
-    return this._options.logger;
+    return this._options.logger || console;
   }
 
   subscribe(event, listener) {
@@ -46,7 +46,8 @@ class Router {
     }
 
     this._options = config || require('../config.json');
-    this._options.logger = this._options.logger || require('technicolor-logger');
+    this._options.logger = require('technicolor-logger');
+    this.logger.init(this._options.loggerConfig || {});
 
     this._expressApp = expressApp;
     this._routes = {};
@@ -85,7 +86,11 @@ class Router {
 
   preRegisterRoute(route) {
     if (this._options.logRouteRegistration) {
-      this.logger.info(JSON.stringify(route));
+      this.logger.info(JSON.stringify({
+        method: route.method,
+        pattern: route.pattern,
+        summary: route.schema.summary
+      }));
     }
   };
 
@@ -285,6 +290,7 @@ class Router {
     });
 
     if (port) {
+      this.logger.info(`Server listening on ${port}`);
       this._expressApp.listen(port);
     }
   }
