@@ -243,7 +243,7 @@ class Router {
     }
     else {
       // No default handler - return 501
-      handlers.push((res, req, next) => {
+      handlers.push((req, res, next) => {
         res.status(501).send();
       });
     }
