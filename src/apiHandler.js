@@ -28,21 +28,23 @@ function getSwaggerSpec (req, res) {
   for (var route in apiRoutes) {
       var currentRoute = apiRoutes[route];
       if (!currentRoute) { continue; }
-      var url = {};
+      let url = {};
 
       let tempObj = convertRouteToSwaggerDoc(currentRoute);
       let httpVerb = currentRoute['method'];
-      tempObj.path = currentRoute.pattern;
-      url[httpVerb] = tempObj;
-      urls[currentRoute.pattern] = url;
+      if (!urls[currentRoute.pattern]) {
+          urls[currentRoute.pattern] = {};
+      }
+      urls[currentRoute.pattern][httpVerb] = tempObj;
   }
+    console.log(urls)
+  // urls = fixSwaggerUrlKeys(urls);
 
   if (config.swaggerOptions.excludedUris.length) {
-    config.swaggerOptions.excludedUris.filter(function (string) {
-      delete urls[string];
+    config.swaggerOptions.excludedUris.filter(string => {
+        delete urls[string];
     });
   }
-
   let swaggerSpec = configureSwaggerOptions(urls);
 
   res.setHeader('Content-Type', 'application/json');
@@ -77,6 +79,18 @@ function convertRouteToSwaggerDoc(route) {
     resultObj.security = { userSecurity : [] };
   }
   return resultObj;
+}
+
+function fixSwaggerUrlKeys(urlObject) {
+    const newObj = Object.assign(
+        {}
+        , ...Object.keys(urlObject).map(key => ({[fix_key(key)]: urlObject[key]}))
+    )
+    return newObj;
+}
+
+function fix_key(key) {
+    return key.replace(/^[^:]*:/, '');
 }
 
 function setup(app, cfg) {
