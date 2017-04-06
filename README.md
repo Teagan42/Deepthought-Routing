@@ -86,6 +86,7 @@ const routeConfig = {
 1. Your Documentation's title, version, and description in the ``` swaggerDefinition``` object. Ensure that the ```host``` and ```basePath``` correlate to your API's index route. You may hard-code the ```host```.
 
 2. You may exclude routes from documentation by adding them to the ```excludedUris``` array on the ```swaggerOptions``` object.
+    1. You may exclude a group of routes that start with the same characters (i.e. ```/user/*``` will exclude all routes starting with ```/user/``` and ```/user*``` will exclude all routes starting with ```/user```)
 
 3. Your ```swaggerUri``` value is the route at which you may view the JSON formatted for Swagger.
 
