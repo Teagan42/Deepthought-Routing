@@ -39,7 +39,7 @@ function getSwaggerSpec (req, res) {
     }
 
     if (config.swaggerOptions.excludedUris.length) {
-        urls = removeExcludedUri(config, urls);
+        removeExcludedUri(config, urls);
     }
     let swaggerSpec = configureSwaggerOptions(urls);
 
@@ -97,7 +97,8 @@ function setup(app, cfg) {
 
 function removeExcludedUri(config, urls) {
     config.swaggerOptions.excludedUris.filter(string => {
-        if (string.indexOf('*') === string[string.length - 1] && string.length > 1) { // if there is an asterisk at end of string and it's not the only character in the string
+        let index = string.indexOf('*');
+        if (string[index] && '*' === string[index] && string.length > 1) { // if there is an asterisk at end of string and it's not the only character in the string
           // delete if matches before *
             string = string.slice(0, -1);
             Object.keys(urls).filter(url => {
@@ -106,10 +107,8 @@ function removeExcludedUri(config, urls) {
                 }
             });
         }
-
         delete urls[string];
     });
-    return urls;
 }
 
 function preRegisterRoute(route) {
