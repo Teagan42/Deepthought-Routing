@@ -79,6 +79,11 @@ const routeConfig = {
     , "swaggerUri": "/"
     , "swaggerOptions": swaggerOptions
     , models: routes.models
+    , responses: {
+        200: {
+            description: ok
+        }
+    }
 };
 ```
 
@@ -89,6 +94,9 @@ const routeConfig = {
     1. You may exclude a group of routes that start with the same characters (i.e. ```/user/*``` will exclude all routes starting with ```/user/``` and ```/user*``` will exclude all routes starting with ```/user```)
 
 3. Your ```swaggerUri``` value is the route at which you may view the JSON formatted for Swagger.
+
+4. The ```responses``` on the routeConfig object is an object whose keys are the status codes
+    1. refer to http://swagger.io/docs/specification/basic-structure/
 
 ## Viewing Swagger documentation
 

@@ -69,7 +69,10 @@ function convertRouteToSwaggerDoc(route) {
     let resultObj = {
         'description': route.description ? route.description : ''
         , 'parameters':  Array.isArray(route.parameters) ? route.parameters : []
-        , 'responses': route.responses ? route.responses : []
+        , 'responses': route.responses ? route.responses : {}
+    };
+    if (config.responses) {
+      resultObj.responses = config.responses;
     }
     if (route.secured) {
         resultObj.security = { userSecurity : [] };
