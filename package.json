@@ -20,15 +20,15 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "eslint": "^2.4.0",
-    "grunt": "^0.4.5",
     "chai": "*",
+    "eslint": "^2.4.0",
+    "grunt": "^1.3.0",
     "grunt-contrib-compass": "^1.1.1",
-    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-exec": "*",
     "grunt-mocha-test": "^0.12.7",
     "gruntify-eslint": "^2.0.0",
-    "mocha": "^2.4.5",
-    "grunt-exec": "*"
+    "mocha": "^8.2.1"
   },
   "author": "James Gibson",
   "contributors": [
